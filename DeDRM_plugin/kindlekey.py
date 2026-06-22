@@ -65,8 +65,7 @@ except NameError:
 #@@CALIBRE_COMPAT_CODE@@
 
 from .utilities import SafeUnbuffered
-from .argv_utils import unicode_argv
-    
+
 
 try:
     from calibre.constants import iswindows, isosx
@@ -118,12 +117,7 @@ def primes(n):
 # data and map should be byte arrays
 def encode(data, map):
     result = b''
-    for char in data:
-        if sys.version_info[0] == 2:
-            value = ord(char)
-        else:
-            value = char
-
+    for value in data:
         Q = (value ^ 0x80) // len(map)
         R = value % len(map)
 
@@ -160,10 +154,7 @@ if iswindows:
         create_unicode_buffer, create_string_buffer, CFUNCTYPE, addressof, \
         string_at, Structure, c_void_p, cast
 
-    try:
-        import winreg
-    except ImportError:
-        import _winreg as winreg
+    import winreg
 
     MAX_PATH = 255
     kernel32 = windll.kernel32
@@ -242,14 +233,9 @@ if iswindows:
 
             # replace any non-ASCII values with 0xfffd
             for i in range(0,len(buffer)):
-                if sys.version_info[0] == 2:
-                    if buffer[i]>u"\u007f":
-                        #print "swapping char "+str(i)+" ("+buffer[i]+")"
-                        buffer[i] = u"\ufffd"
-                else: 
-                    if buffer[i]>"\u007f":
-                        #print "swapping char "+str(i)+" ("+buffer[i]+")"
-                        buffer[i] = "\ufffd"
+                if buffer[i]>"\u007f":
+                    #print "swapping char "+str(i)+" ("+buffer[i]+")"
+                    buffer[i] = "\ufffd"
             # return utf-8 encoding of modified username
             #print "modified username:"+buffer.value
             return buffer.value.encode('utf-8')
@@ -293,11 +279,7 @@ if iswindows:
         # or the python interface to the 32 vs 64 bit registry is broken
         path = ""
         if 'LOCALAPPDATA' in os.environ.keys():
-            # Python 2.x does not return unicode env. Use Python 3.x
-            if sys.version_info[0] == 2:
-                path = winreg.ExpandEnvironmentStrings(u"%LOCALAPPDATA%")
-            else:
-                path = winreg.ExpandEnvironmentStrings("%LOCALAPPDATA%")
+            path = winreg.ExpandEnvironmentStrings("%LOCALAPPDATA%")
             # this is just another alternative.
             # path = getEnvironmentVariable('LOCALAPPDATA')
             if not os.path.isdir(path):
@@ -951,12 +933,11 @@ def usage(progname):
 def cli_main():
     sys.stdout=SafeUnbuffered(sys.stdout)
     sys.stderr=SafeUnbuffered(sys.stderr)
-    argv=unicode_argv("kindlekey.py")
-    progname = os.path.basename(argv[0])
+    progname = os.path.basename(sys.argv[0])
     print("{0} v{1}\nCopyright © 2010-2020 by some_updates, Apprentice Harper et al.".format(progname,__version__))
 
     try:
-        opts, args = getopt.getopt(argv[1:], "hk:")
+        opts, args = getopt.getopt(sys.argv[1:], "hk:")
     except getopt.GetoptError as err:
         print("Error in options or arguments: {0}".format(err.args[0]))
         usage(progname)
@@ -981,7 +962,7 @@ def cli_main():
            outpath = os.path.abspath(outpath)
     else:
         # save to the same directory as the script
-        outpath = os.path.dirname(argv[0])
+        outpath = os.path.dirname(sys.argv[0])
 
     # make sure the outpath is canonical
     outpath = os.path.realpath(os.path.normpath(outpath))
@@ -1012,10 +993,9 @@ def gui_main():
             self.text.insert(tkinter.constants.END, text)
 
 
-    argv=unicode_argv("kindlekey.py")
     root = tkinter.Tk()
     root.withdraw()
-    progpath, progname = os.path.split(argv[0])
+    progpath, progname = os.path.split(sys.argv[0])
     success = False
     try:
         keys = kindlekeys()

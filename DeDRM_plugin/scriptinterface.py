@@ -54,7 +54,7 @@ def decryptepub(infile, outdir, rscpath):
                     errlog += traceback.format_exc()
                     errlog += str(e)
                     rv = 1
-        
+
         # now try with ignoble epub
         # try with any keyfiles (*.b64) in the rscpath
         files = os.listdir(rscpath)

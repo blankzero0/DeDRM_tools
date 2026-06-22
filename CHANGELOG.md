@@ -1,6 +1,6 @@
 # Changelog
 
-List of changes since the fork of Apprentice Harper's repository: 
+List of changes since the fork of Apprentice Harper's repository:
 
 ## Fixes in v10.0.0 (2021-11-17):
 
@@ -24,13 +24,13 @@ List of changes since the fork of Apprentice Harper's repository:
 - Begin work on removing some kinds of watermarks from files after DRM removal. This isn't tested a lot, and is disabled by default. You can enable it in the plugin settings.
 - If you're using the [ACSM Input Plugin / DeACSM](https://www.mobileread.com/forums/showthread.php?t=341975), the encryption key will automatically be extracted from that plugin if necessary.
 
-## Fixes in v10.0.1 (2021-11-19): 
+## Fixes in v10.0.1 (2021-11-19):
 
 - Hotfix update to fix broken EPUB DRM removal due to a typo.
 
 ## Fixes in v10.0.2 (2021-11-29):
 
-- Fix Kindle for Mac key retrieval (merged [apprenticeharper/DeDRM_tools#1936](https://github.com/apprenticeharper/DeDRM_tools/pull/1936) ), fixing #1. 
+- Fix Kindle for Mac key retrieval (merged [apprenticeharper/DeDRM_tools#1936](https://github.com/apprenticeharper/DeDRM_tools/pull/1936) ), fixing #1.
 - Fix Adobe key retrieval in case the username has been changed (merged [apprenticeharper/DeDRM_tools#1946](https://github.com/apprenticeharper/DeDRM_tools/pull/1946) ). This should fix the error "failed to decrypt user key key".
 - Fix small issue with elibri watermark removal.
 - Adobe key name will now contain account email.
@@ -60,7 +60,7 @@ List of changes since the fork of Apprentice Harper's repository:
 - Add support for books with the new ADE3.0+ DRM by merging #48 by a980e066a01. Thanks a lot! (Also fixes #96 on MacOS)
 - Remove OpenSSL support, now the plugin will always use the Python crypto libraries.
 - Obok: Fix issues with invalid UTF-8 characters by merging #26 by baby-bell.
-- ineptpdf: Fix broken V=3 key obfuscation algorithm. 
+- ineptpdf: Fix broken V=3 key obfuscation algorithm.
 - ineptpdf: (Hopefully) fix issues with some B&N PDF files.
 - Fix broken Amazon K4PC key retrieval (fixes #38)
 - Fix bug that corrupts output file for Print-Replica Amazon books (fixes #30).
@@ -69,9 +69,9 @@ List of changes since the fork of Apprentice Harper's repository:
 
 ## Fixes in v10.0.9 (RC for v10.1.0, 2023-08-02):
 
-Note that versions v10.0.4(s), v10.0.5(s) and v10.0.6(s) were released by other people in various forks, so I have decided to make a larger version jump so there are no conflicting version numbers / different builds with the same version number. 
+Note that versions v10.0.4(s), v10.0.5(s) and v10.0.6(s) were released by other people in various forks, so I have decided to make a larger version jump so there are no conflicting version numbers / different builds with the same version number.
 
-This is v10.0.9, a release candidate for v10.1.0. I don't expect there to be major issues / bugs, but since a lot of code has changed in the last year I wanted to get some "extended testing" before this becomes v10.1.0. 
+This is v10.0.9, a release candidate for v10.1.0. I don't expect there to be major issues / bugs, but since a lot of code has changed in the last year I wanted to get some "extended testing" before this becomes v10.1.0.
 
 - Fix a bug introduced with #48 that breaks DeDRM'ing on Calibre 4 (fixes #101).
 - Fix some more Calibre-6 bugs in the Obok plugin (should fix #114).
@@ -90,11 +90,11 @@ This is v10.0.9, a release candidate for v10.1.0. I don't expect there to be maj
 - Obok: Add new setting option "Add new entry" for duplicate books to always add them to the Calibre database as a new book. Fixes #148.
 - Obok: Fix where changing the Calibre UI language to some languages would cause the "duplicate book" setting to reset.
 - Fix Python3 bug in stylexml2css.php script, fixes #232.
-- PDF: Ignore invalid PDF objids unless the script is running in strict mode. Fixes some PDFs, apparently. Fixes #233. 
-- Bugfix: EPUBs with remaining content in the encryption.xml after decryption weren't written correctly. 
+- PDF: Ignore invalid PDF objids unless the script is running in strict mode. Fixes some PDFs, apparently. Fixes #233.
+- Bugfix: EPUBs with remaining content in the encryption.xml after decryption weren't written correctly.
 - Support for Adobe's 'aes128-cbc-uncompressed' encryption method (fixes #242).
 - Two bugfixes for Amazon DeDRM from Satuoni ( https://github.com/noDRM/DeDRM_tools/issues/315#issuecomment-1508305428 ) and andrewc12 ( https://github.com/andrewc12/DeDRM_tools/commit/d9233d61f00d4484235863969919059f4d0b2057 ) that might make the plugin work with newer versions.
-- Fix font decryption not working with some books (fixes #347), thanks for the patch @bydioeds. 
+- Fix font decryption not working with some books (fixes #347), thanks for the patch @bydioeds.
 - Fix a couple unicode errors for Python2 in Kindle and Nook code.
 
 ## Fixes on master (not yet released):

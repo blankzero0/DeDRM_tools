@@ -14,14 +14,14 @@
 
 """
 This file used to contain code to remove the Readium LCP DRM
-from eBooks. Unfortunately, Readium has issued a DMCA takedown 
-request, so I was forced to remove that code: 
+from eBooks. Unfortunately, Readium has issued a DMCA takedown
+request, so I was forced to remove that code:
 
 https://github.com/github/dmca/blob/master/2022/01/2022-01-04-readium.md
 
 This file now just returns an error message when asked to remove LCP DRM.
-For more information, see this issue: 
-https://github.com/noDRM/DeDRM_tools/issues/18 
+For more information, see this issue:
+https://github.com/noDRM/DeDRM_tools/issues/18
 """
 
 __license__ = 'GPL v3'
@@ -37,7 +37,7 @@ class LCPError(Exception):
 
 # Check file to see if this is an LCP-protected file
 def isLCPbook(inpath):
-    try: 
+    try:
         with closing(ZipFile(open(inpath, 'rb'))) as lcpbook:
             if ("META-INF/license.lcpl" not in lcpbook.namelist() or
                 "META-INF/encryption.xml" not in lcpbook.namelist() or
@@ -49,9 +49,9 @@ def isLCPbook(inpath):
             if "id" in license and "encryption" in license and "profile" in license["encryption"]:
                 return True
 
-    except: 
+    except:
         return False
-    
+
     return False
 
 

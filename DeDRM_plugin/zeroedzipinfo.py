@@ -3,15 +3,15 @@
 
 
 """
-Python 3's "zipfile" has an annoying bug where the `external_attr` field 
-of a ZIP file cannot be set to 0. However, if the original DRMed ZIP has 
-that set to 0 then we want the DRM-free ZIP to have that as 0, too. 
+Python 3's "zipfile" has an annoying bug where the `external_attr` field
+of a ZIP file cannot be set to 0. However, if the original DRMed ZIP has
+that set to 0 then we want the DRM-free ZIP to have that as 0, too.
 See https://github.com/python/cpython/issues/87713
 
 We cannot just set the "external_attr" to 0 as the code to save the ZIP
-resets that variable. 
+resets that variable.
 
-So, here's a class that inherits from ZipInfo and ensures that EVERY 
+So, here's a class that inherits from ZipInfo and ensures that EVERY
 read access to that variable will return a 0 ...
 
 """

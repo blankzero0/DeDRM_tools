@@ -63,17 +63,12 @@ except ImportError:
 
 
 def unpad(data, padding=16):
-    if sys.version_info[0] == 2:
-        pad_len = ord(data[-1])
-    else:
-        pad_len = data[-1]
-
+    pad_len = data[-1]
     return data[:-pad_len]
 
 #@@CALIBRE_COMPAT_CODE@@
 
 from .utilities import SafeUnbuffered
-from .argv_utils import unicode_argv
 
 
 class ADEPTError(Exception):
@@ -318,7 +313,7 @@ def decryptBook(userkey, inpath, outpath):
 
                     # Python 3 has a bug where the external_attr is reset to `0o600 << 16`
                     # if it's NULL, so we need a workaround:
-                    if zi.external_attr == 0: 
+                    if zi.external_attr == 0:
                         zi = ZeroedZipInfo(zi)
 
 
@@ -335,12 +330,11 @@ def decryptBook(userkey, inpath, outpath):
 def cli_main():
     sys.stdout=SafeUnbuffered(sys.stdout)
     sys.stderr=SafeUnbuffered(sys.stderr)
-    argv=unicode_argv("ineptepub.py")
-    progname = os.path.basename(argv[0])
-    if len(argv) != 4:
+    progname = os.path.basename(sys.argv[0])
+    if len(sys.argv) != 4:
         print("usage: {0} <keyfile.der> <inbook.epub> <outbook.epub>".format(progname))
         return 1
-    keypath, inpath, outpath = argv[1:]
+    keypath, inpath, outpath = sys.argv[1:]
     userkey = open(keypath,'rb').read()
     result = decryptBook(userkey, inpath, outpath)
     if result == 0:

@@ -55,7 +55,6 @@ import sys, struct, os, traceback
 import zlib
 import zipfile
 import xml.etree.ElementTree as etree
-from .argv_utils import unicode_argv
 
 NSMAP = {'adept': 'http://ns.adobe.com/adept',
          'enc': 'http://www.w3.org/2001/04/xmlenc#'}
@@ -137,11 +136,11 @@ def encryption(infile):
                 elif 'META-INF/rights.xml' in namelist and b"<kdrm>" in inzip.read("META-INF/rights.xml"):
                     # Untested, just found this info on Google
                     encryption = "Kobo"
-                
+
                 elif 'META-INF/rights.xml' not in namelist or 'META-INF/encryption.xml' not in namelist:
                     encryption = "Unencrypted"
                 else:
-                    try: 
+                    try:
                         rights = etree.fromstring(inzip.read('META-INF/rights.xml'))
                         adept = lambda tag: '{%s}%s' % (NSMAP['adept'], tag)
                         expr = './/%s' % (adept('encryptedKey'),)
@@ -152,18 +151,17 @@ def encryption(infile):
                             encryption = "B&N"
                         else:
                             encryption = "Unknown (key len " + str(len(bookkey)) + ")"
-                    except: 
+                    except:
                         encryption = "Unknown"
     except:
         traceback.print_exc()
     return encryption
 
 def main():
-    argv=unicode_argv("epubtest.py")
-    if len(argv) < 2:
+    if len(sys.argv) < 2:
         print("Give an ePub file as a parameter.")
     else:
-        print(encryption(argv[1]))
+        print(encryption(sys.argv[1]))
     return 0
 
 if __name__ == "__main__":

@@ -48,7 +48,6 @@ from base64 import b64decode
 
 
 from .utilities import SafeUnbuffered
-from .argv_utils import unicode_argv
 
 
 try:
@@ -68,10 +67,7 @@ if iswindows:
         c_long, c_ulong
 
     from ctypes.wintypes import LPVOID, DWORD, BOOL
-    try:
-        import winreg
-    except ImportError:
-        import _winreg as winreg
+    import winreg
 
     try:
         from Cryptodome.Cipher import AES
@@ -79,11 +75,7 @@ if iswindows:
         from Crypto.Cipher import AES
 
     def unpad(data, padding=16):
-        if sys.version_info[0] == 2:
-            pad_len = ord(data[-1])
-        else:
-            pad_len = data[-1]
-
+        pad_len = data[-1]
         return data[:-pad_len]
 
     DEVICE_KEY_PATH = r'Software\Adobe\Adept\Device'
@@ -135,24 +127,14 @@ if iswindows:
     GetUserName = GetUserName()
 
     def GetUserName2():
-        try:
-            from winreg import OpenKey, QueryValueEx, HKEY_CURRENT_USER
-        except ImportError:
-            # We're on Python 2
-            try:
-                # The default _winreg on Python2 isn't unicode-safe.
-                # Check if we have winreg_unicode, a unicode-safe alternative. 
-                # Without winreg_unicode, this will fail with Unicode chars in the username.
-                from adobekey_winreg_unicode import OpenKey, QueryValueEx, HKEY_CURRENT_USER
-            except:
-                from _winreg import OpenKey, QueryValueEx, HKEY_CURRENT_USER
+        from winreg import OpenKey, QueryValueEx, HKEY_CURRENT_USER
 
-        try: 
+        try:
             DEVICE_KEY_PATH = r'Software\Adobe\Adept\Device'
             regkey = OpenKey(HKEY_CURRENT_USER, DEVICE_KEY_PATH)
             userREG = QueryValueEx(regkey, 'username')[0].encode('utf-16-le')[::2]
             return userREG
-        except: 
+        except:
             return None
 
     PAGE_EXECUTE_READWRITE = 0x40
@@ -192,7 +174,7 @@ if iswindows:
 
         def __del__(self):
             if self._buf is not None:
-                try: 
+                try:
                     VirtualFree(self._buf)
                     self._buf = None
                 except TypeError:
@@ -282,7 +264,7 @@ if iswindows:
         vendor = cpuid0()
         signature = struct.pack('>I', cpuid1())[1:]
         user = GetUserName2()
-        if user is None: 
+        if user is None:
             user = GetUserName()
         entropy = struct.pack('>I12s3s13s', serial, vendor, signature, user)
         cuser = winreg.HKEY_CURRENT_USER
@@ -308,7 +290,7 @@ if iswindows:
             except:
                 # No more keys
                 break
-                
+
             ktype = winreg.QueryValueEx(plkparent, None)[0]
             if ktype != 'credentials':
                 continue
@@ -324,11 +306,11 @@ if iswindows:
                     uuid_name = uuid_name + winreg.QueryValueEx(plkkey, 'value')[0][9:] + "_"
                 if ktype == 'username':
                     # Add account type & email to key name, if present
-                    try: 
-                        uuid_name = uuid_name + winreg.QueryValueEx(plkkey, 'method')[0] + "_" 
+                    try:
+                        uuid_name = uuid_name + winreg.QueryValueEx(plkkey, 'method')[0] + "_"
                     except:
                         pass
-                    try: 
+                    try:
                         uuid_name = uuid_name + winreg.QueryValueEx(plkkey, 'value')[0] + "_"
                     except:
                         pass
@@ -391,12 +373,12 @@ elif isosx:
 
         exprUUID = '//%s/%s' % (adept('credentials'), adept('user'))
         keyName = ""
-        try: 
+        try:
             keyName = tree.findtext(exprUUID)[9:] + "_"
-        except: 
+        except:
             pass
 
-        try: 
+        try:
             exprMail = '//%s/%s' % (adept('credentials'), adept('username'))
             keyName = keyName + tree.find(exprMail).attrib["method"] + "_"
             keyName = keyName + tree.findtext(exprMail) + "_"
@@ -454,12 +436,11 @@ def usage(progname):
 def cli_main():
     sys.stdout=SafeUnbuffered(sys.stdout)
     sys.stderr=SafeUnbuffered(sys.stderr)
-    argv=unicode_argv("adobekey.py")
-    progname = os.path.basename(argv[0])
+    progname = os.path.basename(sys.argv[0])
     print("{0} v{1}\nCopyright © 2009-2020 i♥cabbages, Apprentice Harper et al.".format(progname,__version__))
 
     try:
-        opts, args = getopt.getopt(argv[1:], "h")
+        opts, args = getopt.getopt(sys.argv[1:], "h")
     except getopt.GetoptError as err:
         print("Error in options or arguments: {0}".format(err.args[0]))
         usage(progname)
@@ -481,7 +462,7 @@ def cli_main():
            outpath = os.path.abspath(outpath)
     else:
         # save to the same directory as the script
-        outpath = os.path.dirname(argv[0])
+        outpath = os.path.dirname(sys.argv[0])
 
     # make sure the outpath is the
     outpath = os.path.realpath(os.path.normpath(outpath))
@@ -532,10 +513,9 @@ def gui_main():
             self.text.insert(tkinter.constants.END, text)
 
 
-    argv=unicode_argv("adobekey.py")
     root = tkinter.Tk()
     root.withdraw()
-    progpath, progname = os.path.split(argv[0])
+    progpath, progname = os.path.split(sys.argv[0])
     success = False
     try:
         keys, names = adeptkeys()

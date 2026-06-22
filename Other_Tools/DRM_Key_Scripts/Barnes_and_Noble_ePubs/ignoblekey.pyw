@@ -52,7 +52,7 @@ class SafeUnbuffered:
             raise
     def __getattr__(self, attr):
         return getattr(self.stream, attr)
-        
+
 
 try:
     from calibre.constants import iswindows, isosx
@@ -106,10 +106,7 @@ def getNookLogFiles():
     logFiles = []
     found = False
     if iswindows:
-        try:
-            import winreg
-        except ImportError:
-            import _winreg as winreg
+        import winreg
 
         # some 64 bit machines do not have the proper registry key for some reason
         # or the python interface to the 32 vs 64 bit registry is broken

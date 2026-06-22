@@ -8,7 +8,7 @@ Installation
 ------------
 Open calibre's Preferences dialog.  Click on the "Plugins" button.  Next, click on the button, "Load plugin from file".  Navigate to the unzipped DeDRM_tools folder, find the file "obok_plugin.zip".  Click to select the file and select "Open".  Click "Yes" in the "Are you sure?" dialog box. Click the "OK" button in the "Success" dialog box.
 
-Note: This plugin requires the "wmic" component on Windows. On Windows 10 and below this will be available by default, on Windows 11 it needs to be explicitly enabled. Make sure that on your Windows 11 machine, under Settings -> System -> Optional features -> Add an optional feature -> View features, "WMIC" is enabled / activated, otherwise this plugin may not work correctly. 
+Note: This plugin requires the "wmic" component on Windows. On Windows 10 and below this will be available by default, on Windows 11 it needs to be explicitly enabled. Make sure that on your Windows 11 machine, under Settings -> System -> Optional features -> Add an optional feature -> View features, "WMIC" is enabled / activated, otherwise this plugin may not work correctly.
 
 
 Customization

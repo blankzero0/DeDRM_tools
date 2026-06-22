@@ -55,11 +55,11 @@ def make_release(version):
 
     os.mkdir(RELEASE_DIR)
 
-    # Copy folder 
+    # Copy folder
     shutil.copytree(DEDRM_SRC_DIR, DEDRM_SRC_TMP_DIR)
 
     # Modify folder
-    try: 
+    try:
         shutil.rmtree(os.path.join(os.path.abspath(DEDRM_SRC_TMP_DIR), "__pycache__"))
     except:
         pass

@@ -10,7 +10,7 @@ import sys, os, traceback, json, codecs, base64, time
 
 from PyQt5.Qt import (Qt, QWidget, QHBoxLayout, QVBoxLayout, QLabel, QLineEdit,
                       QGroupBox, QPushButton, QListWidget, QListWidgetItem, QCheckBox,
-                      QAbstractItemView, QIcon, QDialog, QDialogButtonBox, QUrl, 
+                      QAbstractItemView, QIcon, QDialog, QDialogButtonBox, QUrl,
                       QCheckBox, QComboBox)
 
 from PyQt5 import Qt as QtGui
@@ -34,19 +34,19 @@ from .utilities import uStrCmp
 import prefs
 import androidkindlekey
 
-def checkForDeACSMkeys(): 
-        try: 
+def checkForDeACSMkeys():
+        try:
             from calibre_plugins.deacsm.libadobeAccount import exportAccountEncryptionKeyDER, getAccountUUID
-        except: 
-            # Looks like DeACSM is not installed. 
+        except:
+            # Looks like DeACSM is not installed.
             return None, None
 
         try:
             from calibre.ptempfile import TemporaryFile
-       
+
 
             acc_uuid = getAccountUUID()
-            if acc_uuid is None: 
+            if acc_uuid is None:
                 return None, None
 
             name = "DeACSM_uuid_" + getAccountUUID()
@@ -57,7 +57,7 @@ def checkForDeACSMkeys():
             with TemporaryFile(suffix='.der') as tmp_key_file:
                 export_result = exportAccountEncryptionKeyDER(tmp_key_file)
 
-                if (export_result is False): 
+                if (export_result is False):
                     return None, None
 
                 # Read key file
@@ -65,7 +65,7 @@ def checkForDeACSMkeys():
                     new_key_value = keyfile.read()
 
             return new_key_value, name
-        except: 
+        except:
             traceback.print_exc()
             return None, None
 
@@ -165,7 +165,7 @@ class ConfigWidget(QWidget):
         button_layout.addWidget(self.mobi_button)
         button_layout.addWidget(self.ereader_button)
         button_layout.addWidget(self.lcp_button)
-        
+
 
         self.chkFontObfuscation = QtGui.QCheckBox(_("Deobfuscate EPUB fonts"))
         self.chkFontObfuscation.setToolTip("Deobfuscates fonts in EPUB files after DRM removal")
@@ -327,7 +327,7 @@ class ManageKeysDialog(QDialog):
             self.export_key_button.setIcon(QIcon(I('save.png')))
             self.export_key_button.clicked.connect(self.export_key)
             button_layout.addWidget(self.export_key_button)
-        try: 
+        try:
             # QT 6
             spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Policy.Minimum, QtGui.QSizePolicy.Policy.Expanding)
         except AttributeError:
@@ -387,15 +387,15 @@ class ManageKeysDialog(QDialog):
             # New key generation cancelled.
             return
 
-        if hasattr(d, "k_key_list") and d.k_key_list is not None: 
+        if hasattr(d, "k_key_list") and d.k_key_list is not None:
             # importing multiple keys
             idx = -1
             dup_key_count = 0
             added_key_count = 0
-            
+
             while True:
                 idx = idx + 1
-                try: 
+                try:
                     new_key_value = d.k_key_list[idx]
                 except:
                     break
@@ -412,7 +412,7 @@ class ManageKeysDialog(QDialog):
                         continue
                     self.plugin_keys.append(new_key_value)
                     added_key_count = added_key_count + 1
-                
+
             if (added_key_count > 0 or dup_key_count > 0):
                 if (added_key_count == 0):
                     info_dialog(None, "{0} {1}: Adding {2}".format(PLUGIN_NAME, PLUGIN_VERSION,self.key_type_name),
@@ -638,9 +638,9 @@ class AddBandNKeyDialog(QDialog):
 
         if idx == 1:
             self.add_fields_for_passhash()
-        elif idx == 2: 
+        elif idx == 2:
             self.add_fields_for_b64_passhash()
-        elif idx == 3: 
+        elif idx == 3:
             self.add_fields_for_ade_passhash()
         elif idx == 4:
             self.add_fields_for_windows_nook()
@@ -660,7 +660,7 @@ class AddBandNKeyDialog(QDialog):
         ade_extr_group_box_layout.addWidget(QLabel("Click \"OK\" to try and dump PassHash data \nfrom Adobe Digital Editions. This works if\nyou've opened your PassHash books in ADE before.", self))
 
         self.button_box.hide()
-        
+
         self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         self.button_box.accepted.connect(self.accept_ade_dump_passhash)
         self.button_box.rejected.connect(self.reject)
@@ -695,7 +695,7 @@ class AddBandNKeyDialog(QDialog):
         ph_path_group.addWidget(self.cc_ledit)
 
         self.button_box.hide()
-        
+
         self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         self.button_box.accepted.connect(self.accept_android_nook)
         self.button_box.rejected.connect(self.reject)
@@ -719,7 +719,7 @@ class AddBandNKeyDialog(QDialog):
         ph_key_name_group.addWidget(self.key_ledit)
 
         self.button_box.hide()
-        
+
         self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         self.button_box.accepted.connect(self.accept_win_nook)
         self.button_box.rejected.connect(self.reject)
@@ -752,7 +752,7 @@ class AddBandNKeyDialog(QDialog):
         ph_name_group.addWidget(self.cc_ledit)
 
         self.button_box.hide()
-        
+
         self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         self.button_box.accepted.connect(self.accept_b64_passhash)
         self.button_box.rejected.connect(self.reject)
@@ -793,7 +793,7 @@ class AddBandNKeyDialog(QDialog):
         ph_pass_group.addWidget(self.cc_ledit)
 
         self.button_box.hide()
-        
+
         self.button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
         self.button_box.accepted.connect(self.accept_passhash)
         self.button_box.rejected.connect(self.reject)
@@ -828,7 +828,7 @@ class AddBandNKeyDialog(QDialog):
 
     @property
     def key_name(self):
-        try: 
+        try:
             return str(self.key_ledit.text()).strip()
         except:
             return self.result_data_name
@@ -863,7 +863,7 @@ class AddBandNKeyDialog(QDialog):
 
 
     def accept_android_nook(self):
-        
+
         if len(self.key_name) < 4:
             errmsg = "Key name must be at <i>least</i> 4 characters long!"
             return error_dialog(None, "{0} {1}".format(PLUGIN_NAME, PLUGIN_VERSION), errmsg, show=True, show_copy_button=False)
@@ -874,7 +874,7 @@ class AddBandNKeyDialog(QDialog):
             path_to_ade_data = os.path.join(path_to_ade_data, ".adobe-digital-editions")
         elif (os.path.isfile(os.path.join(path_to_ade_data, "activation.xml"))):
             pass
-        else: 
+        else:
             errmsg = "This isn't the correct path, or the data is invalid."
             return error_dialog(None, "{0} {1}".format(PLUGIN_NAME, PLUGIN_VERSION), errmsg, show=True, show_copy_button=False)
 
@@ -895,7 +895,7 @@ class AddBandNKeyDialog(QDialog):
         keys = []
         names = []
         idx = 1
-        for key in store_result: 
+        for key in store_result:
             keys.append(key)
             names.append(self.key_name + "_" + str(idx))
             idx = idx + 1
@@ -907,8 +907,8 @@ class AddBandNKeyDialog(QDialog):
 
 
     def accept_ade_dump_passhash(self):
-        
-        try: 
+
+        try:
             from adobekey_get_passhash import passhash_keys
             keys, names = passhash_keys()
         except:
@@ -924,7 +924,7 @@ class AddBandNKeyDialog(QDialog):
             idx = idx + 1
             if key in self.parent.plugin_keys.values():
                 continue
-        
+
             new_keys.append(key)
             new_names.append(names[idx])
 
@@ -949,14 +949,14 @@ class AddBandNKeyDialog(QDialog):
             errmsg = "Key name must be at <i>least</i> 4 characters long!"
             return error_dialog(None, "{0} {1}".format(PLUGIN_NAME, PLUGIN_VERSION), errmsg, show=True, show_copy_button=False)
 
-        try: 
+        try:
             from ignoblekeyWindowsStore import dump_keys
             store_result = dump_keys(False)
         except:
             errmsg = "Failed to import from Nook Microsoft Store app."
             return error_dialog(None, "{0} {1}".format(PLUGIN_NAME, PLUGIN_VERSION), errmsg, show=True, show_copy_button=False)
 
-        try: 
+        try:
             # Try the Nook Study app
             from ignoblekeyNookStudy import nookkeys
             study_result = nookkeys()
@@ -968,12 +968,12 @@ class AddBandNKeyDialog(QDialog):
         keys = []
         names = []
         idx = 1
-        for key in store_result: 
+        for key in store_result:
             keys.append(key)
             names.append(self.key_name + "_nookStore_" + str(idx))
             idx = idx + 1
         idx = 1
-        for key in study_result: 
+        for key in study_result:
             keys.append(key)
             names.append(self.key_name + "_nookStudy_" + str(idx))
             idx = idx + 1
@@ -985,7 +985,7 @@ class AddBandNKeyDialog(QDialog):
             return
 
 
-        # Okay, we didn't find anything. 
+        # Okay, we didn't find anything.
         errmsg = "Didn't find any Nook keys in the Windows app."
         error_dialog(None, "{0} {1}".format(PLUGIN_NAME, PLUGIN_VERSION), errmsg, show=True, show_copy_button=False)
         QDialog.reject(self)
@@ -995,21 +995,21 @@ class AddBandNKeyDialog(QDialog):
         if len(self.key_name) == 0 or len(self.cc_number) == 0 or self.key_name.isspace() or self.cc_number.isspace():
             errmsg = "All fields are required!"
             return error_dialog(None, "{0} {1}".format(PLUGIN_NAME, PLUGIN_VERSION), errmsg, show=True, show_copy_button=False)
-        
+
         if len(self.key_name) < 4:
             errmsg = "Key name must be at <i>least</i> 4 characters long!"
             return error_dialog(None, "{0} {1}".format(PLUGIN_NAME, PLUGIN_VERSION), errmsg, show=True, show_copy_button=False)
 
-        try: 
+        try:
             x = base64.b64decode(self.cc_number)
-        except: 
+        except:
             errmsg = "Key data is no valid base64 string!"
             return error_dialog(None, "{0} {1}".format(PLUGIN_NAME, PLUGIN_VERSION), errmsg, show=True, show_copy_button=False)
 
 
         self.result_data = self.cc_number
         QDialog.accept(self)
-    
+
     def accept_passhash(self):
         if len(self.key_name) == 0 or len(self.user_name) == 0 or len(self.cc_number) == 0 or self.key_name.isspace() or self.user_name.isspace() or self.cc_number.isspace():
             errmsg = "All fields are required!"
@@ -1018,20 +1018,20 @@ class AddBandNKeyDialog(QDialog):
             errmsg = "Key name must be at <i>least</i> 4 characters long!"
             return error_dialog(None, "{0} {1}".format(PLUGIN_NAME, PLUGIN_VERSION), errmsg, show=True, show_copy_button=False)
 
-        try: 
+        try:
             from ignoblekeyGenPassHash import generate_key
             self.result_data = generate_key(self.user_name, self.cc_number)
-        except: 
+        except:
             errmsg = "Key generation failed."
             return error_dialog(None, "{0} {1}".format(PLUGIN_NAME, PLUGIN_VERSION), errmsg, show=True, show_copy_button=False)
-        
+
         if len(self.result_data) == 0:
             errmsg = "Key generation failed."
             return error_dialog(None, "{0} {1}".format(PLUGIN_NAME, PLUGIN_VERSION), errmsg, show=True, show_copy_button=False)
 
         QDialog.accept(self)
 
-        
+
 
 class AddEReaderDialog(QDialog):
     def __init__(self, parent=None,):
@@ -1119,7 +1119,7 @@ class AddAdeptDialog():
     def exec_(self):
         return
 
-    def result(self): 
+    def result(self):
         return True
 
     @property
@@ -1127,7 +1127,7 @@ class AddAdeptDialog():
         return True
 
     def __init__(self, parent=None,):
-        
+
         self.parent = parent
         self.new_keys = []
         self.new_names = []
@@ -1143,15 +1143,7 @@ class AddAdeptDialog():
                 scriptpath = os.path.join(parent.parent.alfdir,"adobekey.py")
                 defaultkeys, defaultnames = WineGetKeys(scriptpath, ".der",parent.getwineprefix())
 
-            if sys.version_info[0] < 3:
-                # Python2
-                import itertools
-                zip_function = itertools.izip
-            else:
-                # Python3
-                zip_function = zip
-
-            for key, name in zip_function(defaultkeys, defaultnames):
+            for key, name in zip(defaultkeys, defaultnames):
                 key = codecs.encode(key,'hex').decode("latin-1")
                 if key in self.parent.plugin_keys.values():
                     print("Found key '{0}' in ADE - already present, skipping.".format(name))
@@ -1162,37 +1154,37 @@ class AddAdeptDialog():
             print("Exception while checking for ADE keys")
             traceback.print_exc()
 
-        
+
         # Check for keys in the DeACSM plugin
-        try: 
+        try:
             key, name = checkForDeACSMkeys()
 
-            if key is not None: 
+            if key is not None:
                 key = codecs.encode(key,'hex').decode("latin-1")
                 if key in self.parent.plugin_keys.values():
                     print("Found key '{0}' in DeACSM - already present, skipping.".format(name))
-                else: 
+                else:
                     # Found new key, add that.
                     self.new_keys.append(key)
                     self.new_names.append(name)
-        except: 
+        except:
             print("Exception while checking for DeACSM keys")
             traceback.print_exc()
 
-        # Just in case ADE and DeACSM are activated with the same account, 
+        # Just in case ADE and DeACSM are activated with the same account,
         # check the new_keys list for duplicates and remove them, if they exist.
 
         new_keys_2 = []
         new_names_2 = []
         i = 0
-        while True: 
+        while True:
             if i >= len(self.new_keys):
                 break
             if not self.new_keys[i] in new_keys_2:
                 new_keys_2.append(self.new_keys[i])
                 new_names_2.append(self.new_names[i])
             i = i + 1
-        
+
         self.k_full_key_list = new_keys_2
         self.k_full_name_list = new_names_2
 
@@ -1205,7 +1197,7 @@ class AddAdeptDialog():
     def key_value(self):
         return codecs.encode(self.new_keys[0],'hex').decode("latin-1")
 
-    
+
     @property
     def k_name_list(self):
         # If the plugin supports returning multiple keys, return a list of names.

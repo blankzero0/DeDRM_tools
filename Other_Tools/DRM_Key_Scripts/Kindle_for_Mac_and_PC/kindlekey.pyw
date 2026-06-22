@@ -64,7 +64,7 @@ class SafeUnbuffered:
             raise
     def __getattr__(self, attr):
         return getattr(self.stream, attr)
-        
+
 
 try:
     from calibre.constants import iswindows, isosx
@@ -185,10 +185,7 @@ if iswindows:
         create_unicode_buffer, create_string_buffer, CFUNCTYPE, addressof, \
         string_at, Structure, c_void_p, cast
 
-    try:
-        import winreg
-    except ImportError:
-        import _winreg as winreg
+    import winreg
     MAX_PATH = 255
     kernel32 = windll.kernel32
     advapi32 = windll.advapi32
@@ -903,7 +900,7 @@ if iswindows:
                 # double the buffer size
                 buffer = create_unicode_buffer(len(buffer) * 2)
                 size.value = len(buffer)
-            
+
             # replace any non-ASCII values with 0xfffd
             for i in xrange(0,len(buffer)):
                 if buffer[i]>u"\u007f":
@@ -1494,7 +1491,7 @@ elif isosx:
             try:
                 DB = {}
                 items = data.split('/')
-               
+
                 # the headerblob is the encrypted information needed to build the entropy string
                 headerblob = items.pop(0)
                 encryptedValue = decode(headerblob, charMap1)

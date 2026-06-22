@@ -8,7 +8,7 @@ Based on ignoblekeyWindowsStore.py, updated for Android by noDRM.
 import sys
 import os
 import base64
-try: 
+try:
     from Cryptodome.Cipher import AES
 except ImportError:
     from Crypto.Cipher import AES
@@ -16,11 +16,7 @@ import hashlib
 from lxml import etree
 
 def unpad(data, padding=16):
-    if sys.version_info[0] == 2:
-        pad_len = ord(data[-1])
-    else:
-        pad_len = data[-1]
-
+    pad_len = data[-1]
     return data[:-pad_len]
 
 
@@ -28,7 +24,7 @@ PASS_HASH_SECRET = "9ca588496a1bc4394553d9e018d70b9e"
 
 
 def dump_keys(path_to_adobe_folder):
-    
+
     activation_path = os.path.join(path_to_adobe_folder, "activation.xml")
     device_path = os.path.join(path_to_adobe_folder, "device.xml")
 
@@ -42,8 +38,8 @@ def dump_keys(path_to_adobe_folder):
     # Load files:
     activation_xml = etree.parse(activation_path)
     device_xml = etree.parse(device_path)
-    
-    # Get fingerprint: 
+
+    # Get fingerprint:
     device_fingerprint = device_xml.findall(".//{http://ns.adobe.com/adept}fingerprint")[0].text
     device_fingerprint = base64.b64decode(device_fingerprint).hex()
 
@@ -52,7 +48,7 @@ def dump_keys(path_to_adobe_folder):
     hashes = []
 
     for pass_hash in activation_xml.findall(".//{http://ns.adobe.com/adept}passHash"):
-        try: 
+        try:
             encrypted_cc_hash = base64.b64decode(pass_hash.text)
             cc_hash = unpad(AES.new(hash_key, AES.MODE_CBC, encrypted_cc_hash[:16]).decrypt(encrypted_cc_hash[16:]))
             hashes.append(base64.b64encode(cc_hash).decode("ascii"))

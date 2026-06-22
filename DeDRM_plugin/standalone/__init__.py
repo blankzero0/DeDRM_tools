@@ -10,11 +10,11 @@ from __future__ import absolute_import, print_function
 """
 
 NOTE: This code is not functional (yet). I started working on it a while ago
-to make a standalone version of the plugins that could work without Calibre, 
+to make a standalone version of the plugins that could work without Calibre,
 too, but for now there's only a rough code structure and no working code yet.
 
 Currently, to use these plugins, you will need to use Calibre. Hopwfully that'll
-change in the future. 
+change in the future.
 
 """
 
@@ -22,13 +22,13 @@ change in the future.
 OPT_SHORT_TO_LONG = [
     ["c", "config"],
     ["e", "extract"],
-    ["f", "force"], 
-    ["h", "help"], 
+    ["f", "force"],
+    ["h", "help"],
     ["i", "import"],
     ["o", "output"],
     ["p", "password"],
     ["q", "quiet"],
-    ["t", "test"], 
+    ["t", "test"],
     ["u", "username"],
     ["v", "verbose"],
 ]
@@ -54,10 +54,10 @@ def print_fname(f, info):
 def print_opt(short, long, info):
     if short is None:
         short = "    "
-    else: 
+    else:
         short = "  -" + short
-    
-    if long is None: 
+
+    if long is None:
         long = "            "
     else:
         long = "--" + long.ljust(16)
@@ -94,7 +94,7 @@ def print_help():
     print_fname("passhash", "Manage Adobe PassHashes")
     print_fname("remove_drm", "Remove DRM from one or multiple books")
     print()
-    
+
     # TODO: All parameters that are global should be listed here.
 
 def print_credits():
@@ -121,19 +121,19 @@ def handle_single_argument(arg, next):
     used_up = 0
     global _additional_params
     global config_file_path
-    
-    if arg in ["--username", "--password", "--output", "--outputdir"]: 
+
+    if arg in ["--username", "--password", "--output", "--outputdir"]:
         used_up = 1
         _additional_params.append(arg)
-        if next is None or len(next) == 0: 
+        if next is None or len(next) == 0:
             print_err_header()
             print("Missing parameter for argument " + arg, file=sys.stderr)
             sys.exit(1)
         else:
             _additional_params.append(next[0])
-    
+
     elif arg == "--config":
-        if next is None or len(next) == 0: 
+        if next is None or len(next) == 0:
             print_err_header()
             print("Missing parameter for argument " + arg, file=sys.stderr)
             sys.exit(1)
@@ -144,13 +144,13 @@ def handle_single_argument(arg, next):
     elif arg in ["--help", "--credits", "--verbose", "--quiet", "--extract", "--import", "--overwrite", "--force"]:
         _additional_params.append(arg)
 
-        
+
     else:
         print_err_header()
         print("Unknown argument: " + arg, file=sys.stderr)
         sys.exit(1)
-    
-    
+
+
     # Used up 0 additional arguments
     return used_up
 
@@ -160,7 +160,7 @@ def handle_data(data):
     global _function
     global _additional_data
 
-    if _function is None: 
+    if _function is None:
         _function = str(data)
     else:
         _additional_data.append(str(data))
@@ -171,23 +171,23 @@ def execute_action(action, filenames, params):
     if action == "help":
         print_help()
         sys.exit(0)
-    
-    elif action == "passhash": 
+
+    elif action == "passhash":
         from standalone.passhash import perform_action
         perform_action(params, filenames)
 
     elif action == "remove_drm":
         if not os.path.isfile(os.path.abspath(config_file_path)):
             print("Config file missing ...")
-        
+
         from standalone.remove_drm import perform_action
         perform_action(params, filenames)
-        
+
     elif action == "config":
         import prefs
         config = prefs.DeDRM_Prefs(os.path.abspath(config_file_path))
         print(config["adeptkeys"])
-    
+
     else:
         print("Command '"+action+"' is unknown.", file=sys.stderr)
 
@@ -196,7 +196,7 @@ def main(argv):
     arguments = argv
     skip_opts = False
 
-    # First element is always the ZIP name, remove that. 
+    # First element is always the ZIP name, remove that.
     if not arguments[0].lower().endswith(".zip") and not "calibre" in sys.modules:
         print("Warning: File name does not end in .zip ...")
         print(arguments)
@@ -211,14 +211,14 @@ def main(argv):
 
         if not skip_opts:
             if arg.startswith("--"):
-                # Give the current arg, plus all remaining ones. 
+                # Give the current arg, plus all remaining ones.
                 # Return the number of additional args we used.
                 used = handle_single_argument(arg, arguments)
                 for _ in range(used):
                     # Function returns number of additional arguments that were
-                    # "used up" by that argument. 
+                    # "used up" by that argument.
                     # Remove that amount of arguments from the list.
-                    try: 
+                    try:
                         arguments.pop(0)
                     except:
                         pass
@@ -229,13 +229,13 @@ def main(argv):
                 # with multiple single-letter options combined.
                 while len(single_args) > 0:
                     c = single_args.pop(0)
-                
+
                     # See if we have a long name for that option.
                     for wrapper in OPT_SHORT_TO_LONG:
                         if wrapper[0] == c:
                             c = "--" + wrapper[1]
                             break
-                    else: 
+                    else:
                         c = "-" + c
                     # c is now the long term (unless there is no long version, then it's the short version).
 
@@ -243,23 +243,23 @@ def main(argv):
                         # If we have more short arguments, the argument for this one must be None.
                         handle_single_argument(c, None)
                         used = 0
-                    else: 
+                    else:
                         # If not, then there might be parameters for this short argument.
                         used = handle_single_argument(c, arguments)
 
                     for _ in range(used):
                         # Function returns number of additional arguments that were
-                        # "used up" by that argument. 
+                        # "used up" by that argument.
                         # Remove that amount of arguments from the list.
-                        try: 
+                        try:
                             arguments.pop(0)
-                        except: 
+                        except:
                             pass
-                
+
                 continue
-        
+
         handle_data(arg)
-        
+
 
     if _function is None and "--credits" in _additional_params:
         print_credits()
@@ -268,19 +268,19 @@ def main(argv):
     if _function is None and "--help" in _additional_params:
         print_help()
         sys.exit(0)
-    
+
     if _function is None:
         print_help()
         sys.exit(1)
-    
+
     # Okay, now actually begin doing stuff.
     # This function gets told what to do and gets additional data (filenames).
     # It also receives additional parameters.
     # The rest of the code will be in different Python files.
     execute_action(_function.lower(), _additional_data, _additional_params)
-        
 
-    
+
+
 
 
 if __name__ == "__main__":

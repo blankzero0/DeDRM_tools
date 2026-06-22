@@ -69,7 +69,7 @@ import getopt
 import re
 import traceback
 import time
-try: 
+try:
     import html.entities as htmlentitydefs
 except:
     import htmlentitydefs
@@ -89,8 +89,6 @@ import androidkindlekey
 import kfxdedrm
 
 from .utilities import SafeUnbuffered
-
-from .argv_utils import unicode_argv
 
 
 # cleanup unicode filenames
@@ -161,10 +159,10 @@ def GetDecryptedBook(infile, kDatabases, androidFiles, serials, pids, starttime 
     else:
         mb = topazextract.TopazBook(infile)
 
-    try: 
+    try:
         bookname = unescape(mb.getBookTitle())
         print("Decrypting {1} ebook: {0}".format(bookname, mb.getBookType()))
-    except: 
+    except:
         print("Decrypting {0} ebook.".format(mb.getBookType()))
 
     # copy list of pids
@@ -253,12 +251,11 @@ def usage(progname):
 # Main
 #
 def cli_main():
-    argv=unicode_argv("k4mobidedrm.py")
-    progname = os.path.basename(argv[0])
+    progname = os.path.basename(sys.argv[0])
     print("K4MobiDeDrm v{0}.\nCopyright © 2008-2020 Apprentice Harper et al.".format(__version__))
 
     try:
-        opts, args = getopt.getopt(argv[1:], "k:p:s:a:h")
+        opts, args = getopt.getopt(sys.argv[1:], "k:p:s:a:h")
     except getopt.GetoptError as err:
         print("Error in options or arguments: {0}".format(err.args[0]))
         usage(progname)

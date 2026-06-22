@@ -209,7 +209,7 @@ def _EndRecData(fpin):
         fpin.seek(-sizeEndCentDir, 2)
     except IOError:
         return None
-        
+
     data = fpin.read()
     if data[0:4] == stringEndArchive and data[-2:] == "\000\000":
         # the signature is correct and there's no comment, unpack structure

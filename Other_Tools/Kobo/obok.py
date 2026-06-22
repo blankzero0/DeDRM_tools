@@ -289,7 +289,7 @@ class SafeUnbuffered:
             raise
     def __getattr__(self, attr):
         return getattr(self.stream, attr)
-        
+
 
 
 class KoboLibrary(object):
@@ -354,10 +354,7 @@ class KoboLibrary(object):
         if (self.kobodir == u""):
             # step 4. we haven't found a device with serials, so try desktop apps
             if sys.platform.startswith('win'):
-                try:
-                    import winreg
-                except ImportError:
-                    import _winreg as winreg
+                import winreg
                 if sys.getwindowsversion().major > 5:
                     if 'LOCALAPPDATA' in os.environ.keys():
                         # Python 2.x does not return unicode env. Use Python 3.x
@@ -380,7 +377,7 @@ class KoboLibrary(object):
                 self.kobodir = u""
                 kobodb  = u""
 
-        
+
         if (self.kobodir != u""):
             self.bookdir = os.path.join(self.kobodir, "kepub")
             # make a copy of the database in a temporary file
@@ -491,7 +488,7 @@ class KoboLibrary(object):
                 pass
             row = cursor.fetchone()
         return userids
-               
+
     def __getuserkeys (self, macaddr):
         userids = self.__getuserids()
         userkeys = []
@@ -625,7 +622,7 @@ class KoboFile(object):
                 stride = 2
             else:
                 print("Perhaps utf-8 without BOM")
-                
+
             # now check that the first few characters are in the ASCII range
             for i in xrange(textoffset,textoffset+5*stride,stride):
                 if ord(contents[i])<32 or ord(contents[i])>127:

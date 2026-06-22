@@ -61,7 +61,7 @@ class SafeUnbuffered:
             raise
     def __getattr__(self, attr):
         return getattr(self.stream, attr)
-        
+
 
 try:
     from calibre.constants import iswindows, isosx
@@ -255,7 +255,7 @@ def get_serials2(path=STORAGE2):
             traceback.print_exc()
             pass
     tokens = list(set(tokens))
- 
+
     serials = []
     for x in dsns:
         serials.append(x)

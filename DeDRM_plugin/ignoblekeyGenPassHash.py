@@ -54,8 +54,6 @@ except ImportError:
 
 from .utilities import SafeUnbuffered
 
-from .argv_utils import unicode_argv
-
 class IGNOBLEError(Exception):
     pass
 
@@ -87,12 +85,11 @@ def generate_key(name, ccn):
 def cli_main():
     sys.stdout=SafeUnbuffered(sys.stdout)
     sys.stderr=SafeUnbuffered(sys.stderr)
-    argv=unicode_argv("ignoblekeyGenPassHash.py")
-    progname = os.path.basename(argv[0])
-    if len(argv) != 4:
+    progname = os.path.basename(sys.argv[0])
+    if len(sys.argv) != 4:
         print("usage: {0} <Name> <CC#> <keyfileout.b64>".format(progname))
         return 1
-    name, ccn, keypath = argv[1:]
+    name, ccn, keypath = sys.argv[1:]
     userkey = generate_key(name, ccn)
     open(keypath,'wb').write(userkey)
     return 0

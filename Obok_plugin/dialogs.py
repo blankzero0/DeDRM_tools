@@ -9,12 +9,12 @@ TEXT_DRM_FREE = ' (*: drm - free)'
 LAB_DRM_FREE = '* : drm - free'
 
 try:
-    from PyQt5.Qt import (Qt, QVBoxLayout, QLabel, QApplication, QGroupBox, 
-                          QDialogButtonBox, QHBoxLayout, QTextBrowser, QProgressDialog, 
+    from PyQt5.Qt import (Qt, QVBoxLayout, QLabel, QApplication, QGroupBox,
+                          QDialogButtonBox, QHBoxLayout, QTextBrowser, QProgressDialog,
                           QTimer, QSize, QDialog, QIcon, QTableWidget, QTableWidgetItem)
 except ImportError:
-    from PyQt4.Qt import (Qt, QVBoxLayout, QLabel, QApplication, QGroupBox, 
-                          QDialogButtonBox, QHBoxLayout, QTextBrowser, QProgressDialog, 
+    from PyQt4.Qt import (Qt, QVBoxLayout, QLabel, QApplication, QGroupBox,
+                          QDialogButtonBox, QHBoxLayout, QTextBrowser, QProgressDialog,
                           QTimer, QSize, QDialog, QIcon, QTableWidget, QTableWidgetItem)
 
 try:
@@ -27,10 +27,10 @@ from calibre.gui2.dialogs.message_box import MessageBox
 
 #from calibre.ptempfile import remove_dir
 
-from calibre_plugins.obok_dedrm.utilities import (SizePersistedDialog, ImageTitleLayout, 
+from calibre_plugins.obok_dedrm.utilities import (SizePersistedDialog, ImageTitleLayout,
                                         showErrorDlg, get_icon, convert_qvariant, debug_print
                                         )
-from calibre_plugins.obok_dedrm.__init__ import (PLUGIN_NAME,  
+from calibre_plugins.obok_dedrm.__init__ import (PLUGIN_NAME,
                         PLUGIN_SAFE_NAME, PLUGIN_VERSION, PLUGIN_DESCRIPTION)
 
 try:
@@ -50,7 +50,7 @@ class SelectionDialog(SizePersistedDialog):
         :param interface_action: InterfaceActionObject (InterfacePluginAction class from action.py)
         :param books: list of Kobo book
         '''
-        
+
         self.books = books
         self.gui = gui
         self.interface_action = interface_action
@@ -319,7 +319,7 @@ class AddEpubFormatsProgressDialog(QProgressDialog):
 
         # assign the elements of the 3-tuple details to legible variables
         book_id, mi, path = epub_format[0], epub_format[1], epub_format[2]
-        
+
         # Get the title and build the caption and label text from the string parameters provided
         dtitle = mi.title
         self.setWindowTitle('{0} {1} {2}  ({3} {4} failures)...'.format(self.action_type[0], self.total_count,
@@ -382,7 +382,7 @@ class ViewLog(QDialog):
         QApplication.clipboard().setText(txt)
 
 
-class ResultsSummaryDialog(MessageBox): 
+class ResultsSummaryDialog(MessageBox):
     def __init__(self, parent, title, msg, log='', det_msg=''):
         '''
         :param log: An HTML log

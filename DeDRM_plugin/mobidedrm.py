@@ -87,7 +87,6 @@ import binascii
 
 from .alfcrypto import Pukall_Cipher
 from .utilities import SafeUnbuffered
-from .argv_utils import unicode_argv
 
 
 class DrmException(Exception):
@@ -103,7 +102,7 @@ def PC1(key, src, decryption=True):
     # if we can get it from alfcrypto, use that
     try:
         return Pukall_Cipher().PC1(key,src,decryption)
-    except: 
+    except:
         raise
 
 letters = b'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789'
@@ -134,10 +133,7 @@ def getSizeOfTrailingDataEntries(ptr, size, flags):
         if size <= 0:
             return result
         while True:
-            if sys.version_info[0] == 2:
-                v = ord(ptr[size-1])
-            else:
-                v = ptr[size-1]
+            v = ptr[size-1]
 
             result |= (v & 0x7F) << bitpos
             bitpos += 7
@@ -154,10 +150,7 @@ def getSizeOfTrailingDataEntries(ptr, size, flags):
     # if multibyte data is included in the encryped data, we'll
     # have already cleared this flag.
     if flags & 1:
-        if sys.version_info[0] == 2:
-            num += (ord(ptr[size - num - 1]) & 0x3) + 1
-        else: 
-            num += (ptr[size - num - 1] & 0x3) + 1
+        num += (ptr[size - num - 1] & 0x3) + 1
     return num
 
 
@@ -316,10 +309,7 @@ class MobiBook:
         for pid in pidlist:
             bigpid = pid.encode('utf-8').ljust(16,b'\0')
             temp_key = PC1(keyvec1, bigpid, False)
-            if sys.version_info[0] == 2:
-                temp_key_sum = sum(map(ord,temp_key)) & 0xff
-            else:
-                temp_key_sum = sum(temp_key) & 0xff
+            temp_key_sum = sum(temp_key) & 0xff
             found_key = None
             for i in range(count):
                 verification, size, type, cksum, cookie = struct.unpack('>LLLBxxx32s', data[i*0x30:i*0x30+0x30])
@@ -335,11 +325,8 @@ class MobiBook:
             # Then try the default encoding that doesn't require a PID
             pid = '00000000'
             temp_key = keyvec1
-            if sys.version_info[0] == 2:
-                temp_key_sum = sum(map(ord,temp_key)) & 0xff
-            else:
-                temp_key_sum = sum(temp_key) & 0xff
-            
+            temp_key_sum = sum(temp_key) & 0xff
+
             for i in range(count):
                 verification, size, type, cksum, cookie = struct.unpack('>LLLBxxx32s', data[i*0x30:i*0x30+0x30])
                 if cksum == temp_key_sum:
@@ -468,19 +455,18 @@ def getUnencryptedBook(infile,pidlist):
 
 
 def cli_main():
-    argv=unicode_argv("mobidedrm.py")
-    progname = os.path.basename(argv[0])
-    if len(argv)<3 or len(argv)>4:
+    progname = os.path.basename(sys.argv[0])
+    if len(sys.argv) < 3 or len(sys.argv) > 4:
         print("MobiDeDrm v{0:s}.\nCopyright © 2008-2020 The Dark Reverser, Apprentice Harper et al.".format(__version__))
         print("Removes protection from Kindle/Mobipocket, Kindle/KF8 and Kindle/Print Replica ebooks")
         print("Usage:")
         print("    {0} <infile> <outfile> [<Comma separated list of PIDs to try>]".format(progname))
         return 1
     else:
-        infile = argv[1]
-        outfile = argv[2]
-        if len(argv) == 4:
-            pidlist = argv[3].split(',')
+        infile = sys.argv[1]
+        outfile = sys.argv[2]
+        if len(sys.argv) == 4:
+            pidlist = sys.argv[3].split(',')
         else:
             pidlist = []
         try:

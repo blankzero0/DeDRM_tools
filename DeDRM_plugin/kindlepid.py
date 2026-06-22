@@ -19,7 +19,6 @@ import binascii
 #@@CALIBRE_COMPAT_CODE@@
 
 from .utilities import SafeUnbuffered
-from .argv_utils import unicode_argv
 
 letters = b'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789'
 
@@ -44,10 +43,7 @@ def pidFromSerial(s, l):
 
     arr1 = [0]*l
     for i in range(len(s)):
-        if sys.version_info[0] == 2:
-            arr1[i%l] ^= ord(s[i])
-        else: 
-            arr1[i%l] ^= s[i]
+        arr1[i%l] ^= s[i]
 
     crc_bytes = [crc >> 24 & 0xff, crc >> 16 & 0xff, crc >> 8 & 0xff, crc & 0xff]
     for i in range(l):
@@ -62,9 +58,8 @@ def pidFromSerial(s, l):
 
 def cli_main():
     print("Mobipocket PID calculator for Amazon Kindle. Copyright © 2007, 2009 Igor Skochinsky")
-    argv=unicode_argv("kindlepid.py")
-    if len(argv)==2:
-        serial = argv[1]
+    if len(sys.argv) == 2:
+        serial = sys.argv[1]
     else:
         print("Usage: kindlepid.py <Kindle Serial Number>/<iPhone/iPod Touch UDID>")
         return 1

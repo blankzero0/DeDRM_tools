@@ -85,17 +85,12 @@ except ImportError:
 
 
 def unpad(data, padding=16):
-    if sys.version_info[0] == 2:
-        pad_len = ord(data[-1])
-    else:
-        pad_len = data[-1]
-
+    pad_len = data[-1]
     return data[:-pad_len]
 
 #@@CALIBRE_COMPAT_CODE@@
 
 from .utilities import SafeUnbuffered
-from .argv_utils import unicode_argv
 
 iswindows = sys.platform.startswith('win')
 isosx = sys.platform.startswith('darwin')
@@ -147,10 +142,7 @@ def nunpack(s, default=0):
     elif l == 2:
         return struct.unpack('>H', s)[0]
     elif l == 3:
-        if sys.version_info[0] == 2:
-            return struct.unpack('>L', '\x00'+s)[0]
-        else: 
-            return struct.unpack('>L', bytes([0]) + s)[0]
+        return struct.unpack('>L', bytes([0]) + s)[0]
     elif l == 4:
         return struct.unpack('>L', s)[0]
     else:
@@ -414,10 +406,7 @@ class PSBaseParser(object):
             self.hex += c
             return (self.parse_literal_hex, i+1)
         if self.hex:
-            if sys.version_info[0] == 2: 
-                self.token += chr(int(self.hex, 16))
-            else: 
-                self.token += bytes([int(self.hex, 16)])
+            self.token += bytes([int(self.hex, 16)])
         return (self.parse_literal, i)
 
     def parse_number(self, s, i):
@@ -501,18 +490,11 @@ class PSBaseParser(object):
             self.oct += c
             return (self.parse_string_1, i+1)
         if self.oct:
-            if sys.version_info[0] == 2:
-                self.token += chr(int(self.oct, 8))
-            else: 
-                self.token += bytes([int(self.oct, 8)])  
+            self.token += bytes([int(self.oct, 8)])
             return (self.parse_string, i)
         if c in ESC_STRING:
+            self.token += bytes([ESC_STRING[c]])
 
-            if sys.version_info[0] == 2:
-                self.token += chr(ESC_STRING[c])
-            else: 
-                self.token += bytes([ESC_STRING[c]])
-                
         return (self.parse_string, i+1)
 
     def parse_wopen(self, s, i):
@@ -527,7 +509,7 @@ class PSBaseParser(object):
             i += 1
         if c == b'>':
             # Empty array without any contents. Why though?
-            # We need to add some dummy python object that will serialize to 
+            # We need to add some dummy python object that will serialize to
             # nothing, otherwise the code removes the whole array.
             self.add_token(EmptyArrayValue())
             i += 1
@@ -551,12 +533,7 @@ class PSBaseParser(object):
             return (self.parse_hexstring, len(s))
         j = m.start(0)
         self.token += s[i:j]
-        if sys.version_info[0] == 2:
-            token = HEX_PAIR.sub(lambda m: chr(int(m.group(0), 16)),
-                                                 SPC.sub('', self.token))
-        else: 
-            token = HEX_PAIR.sub(lambda m: bytes([int(m.group(0), 16)]),
-                                                 SPC.sub(b'', self.token))
+        token = HEX_PAIR.sub(lambda m: bytes([int(m.group(0), 16)]), SPC.sub(b'', self.token))
         self.add_token(token)
         return (self.parse_main, j)
 
@@ -577,10 +554,7 @@ class PSBaseParser(object):
         while 1:
             self.fillbuf()
             if eol:
-                if sys.version_info[0] == 2: 
-                    c = self.buf[self.charpos]
-                else: 
-                    c = bytes([self.buf[self.charpos]])
+                c = bytes([self.buf[self.charpos]])
 
                 # handle '\r\n'
                 if c == b'\n':
@@ -591,17 +565,11 @@ class PSBaseParser(object):
             if m:
                 linebuf += self.buf[self.charpos:m.end(0)]
                 self.charpos = m.end(0)
-                if sys.version_info[0] == 2:
-                    if linebuf[-1] == b'\r':
-                        eol = True
-                    else:
-                        break
-                else: 
-                    if bytes([linebuf[-1]]) == b'\r':
-                        eol = True
-                    else:
-                        break
-                    
+                if bytes([linebuf[-1]]) == b'\r':
+                    eol = True
+                else:
+                    break
+
             else:
                 linebuf += self.buf[self.charpos:]
                 self.charpos = len(self.buf)
@@ -977,14 +945,9 @@ class PDFStream(PDFObject):
                     for i in range(0, len(data), columns+1):
                         pred = data[i]
                         ent1 = data[i+1:i+1+columns]
-                        if sys.version_info[0] == 2:
-                            if pred == '\x02':
-                                ent1 = ''.join(chr((ord(a)+ord(b)) & 255) \
-                                               for (a,b) in zip(ent0,ent1))
-                        else: 
-                            if pred == 2:
-                                ent1 = b''.join(bytes([(a+b) & 255]) \
-                                            for (a,b) in zip(ent0,ent1))
+                        if pred == 2:
+                            ent1 = b''.join(bytes([(a+b) & 255]) \
+                                        for (a,b) in zip(ent0,ent1))
                         buf += ent1
                         ent0 = ent1
                     data = buf
@@ -1440,10 +1403,7 @@ class PDFDocument(object):
         x = ARC4.new(hash).decrypt(Odata) # 4
         if R >= 3:
             for i in range(1,19+1):
-                if sys.version_info[0] == 2:
-                    k = b''.join(chr(ord(c) ^ i) for c in hash )
-                else: 
-                    k = b''.join(bytes([c ^ i]) for c in hash )
+                k = b''.join(bytes([c ^ i]) for c in hash )
                 x = ARC4.new(k).decrypt(x)
 
 
@@ -1490,7 +1450,7 @@ class PDFDocument(object):
 
         # Finish hash:
         hash = hash.digest()
-        
+
         if R >= 3:
             # 8
             for _ in range(50):
@@ -1510,13 +1470,10 @@ class PDFDocument(object):
             hash.update(docid[0]) # 3
             x = ARC4.new(key).decrypt(hash.digest()[:16]) # 4
             for i in range(1,19+1):
-                if sys.version_info[0] == 2:
-                    k = b''.join(chr(ord(c) ^ i) for c in key )
-                else: 
-                    k = b''.join(bytes([c ^ i]) for c in key )
+                k = b''.join(bytes([c ^ i]) for c in key)
                 x = ARC4.new(k).decrypt(x)
             u1 = x+x # 32bytes total
-        
+
         if R == 2:
             is_authenticated = (u1 == U)
         else:
@@ -1622,10 +1579,10 @@ class PDFDocument(object):
     def initialize_ebx_ignoble(self, keyb64, docid, param):
         self.is_printable = self.is_modifiable = self.is_extractable = True
 
-        try: 
+        try:
             key = keyb64.decode('base64')[:16]
             # This will probably always error, but I'm not 100% sure, so lets leave the old code in.
-        except AttributeError: 
+        except AttributeError:
             key = codecs.decode(keyb64.encode("ascii"), 'base64')[:16]
 
 
@@ -1785,10 +1742,7 @@ class PDFDocument(object):
         data = data[16:]
         plaintext = AES.new(key,AES.MODE_CBC,ivector).decrypt(data)
         # remove pkcs#5 aes padding
-        if sys.version_info[0] == 2: 
-            cutter = -1 * ord(plaintext[-1])
-        else: 
-            cutter = -1 * plaintext[-1]
+        cutter = -1 * plaintext[-1]
 
         plaintext = plaintext[:cutter]
         return plaintext
@@ -2307,14 +2261,14 @@ class PDFSerializer(object):
 
                 # Fix length:
                 # We've decompressed and then recompressed the PDF stream.
-                # Depending on the algorithm, the implementation, and the compression level, 
+                # Depending on the algorithm, the implementation, and the compression level,
                 # the resulting recompressed stream is unlikely to have the same length as the original.
                 # So we need to update the PDF object to contain the new proper length.
 
-                # Without this change, all PDFs exported by this plugin are slightly corrupted - 
+                # Without this change, all PDFs exported by this plugin are slightly corrupted -
                 # even though most if not all PDF readers can correct that on-the-fly.
 
-                if 'Length' in obj.dic: 
+                if 'Length' in obj.dic:
                     obj.dic['Length'] = len(data)
 
 
@@ -2364,12 +2318,11 @@ def getPDFencryptionType(inpath):
 def cli_main():
     sys.stdout=SafeUnbuffered(sys.stdout)
     sys.stderr=SafeUnbuffered(sys.stderr)
-    argv=unicode_argv("ineptpdf.py")
-    progname = os.path.basename(argv[0])
-    if len(argv) != 4:
+    progname = os.path.basename(sys.argv[0])
+    if len(sys.argv) != 4:
         print("usage: {0} <keyfile.der> <inbook.pdf> <outbook.pdf>".format(progname))
         return 1
-    keypath, inpath, outpath = argv[1:]
+    keypath, inpath, outpath = sys.argv[1:]
     userkey = open(keypath,'rb').read()
     result = decryptBook(userkey, inpath, outpath)
     if result == 0:

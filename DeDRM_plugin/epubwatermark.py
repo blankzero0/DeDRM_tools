@@ -23,7 +23,7 @@ import re
 
 # Runs a RegEx over all HTML/XHTML files to remove watermakrs.
 def removeHTMLwatermarks(object, path_to_ebook):
-    try: 
+    try:
         inf = ZipFile(open(path_to_ebook, 'rb'))
         namelist = inf.namelist()
 
@@ -64,7 +64,7 @@ def removeHTMLwatermarks(object, path_to_ebook):
 
                 # Remove eLibri / LemonInk watermark
                 # Run this in a loop, as it is possible a file has been watermarked twice ...
-                while True: 
+                while True:
                     pre_remove = str_new
                     unique_id = re.search(r'<body[^>]+class="[^"]*(t0x[0-9a-fA-F]{25})[^"]*"[^>]*>', str_new)
                     if (unique_id):
@@ -79,7 +79,7 @@ def removeHTMLwatermarks(object, path_to_ebook):
 
                         if (str_new != pre_remove):
                             count_lemonink_visible += 1
-                    else: 
+                    else:
                         break
 
             except:
@@ -92,7 +92,7 @@ def removeHTMLwatermarks(object, path_to_ebook):
             modded_names.append(file)
             modded_contents.append(str_new)
 
-        
+
         if len(modded_names) == 0:
             # No file modified, return original
             return path_to_ebook
@@ -105,15 +105,15 @@ def removeHTMLwatermarks(object, path_to_ebook):
         # Re-package with modified files:
         namelist.remove("mimetype")
 
-        try: 
+        try:
             output = object.temporary_file(".epub").name
             kwds = dict(compression=ZIP_DEFLATED, allowZip64=False)
             with closing(ZipFile(open(output, 'wb'), 'w', **kwds)) as outf:
                 for path in (["mimetype"] + namelist):
 
                     data = inf.read(path)
-                    
-                    try: 
+
+                    try:
                         modded_index = None
                         modded_index = modded_names.index(path)
                     except:
@@ -125,7 +125,7 @@ def removeHTMLwatermarks(object, path_to_ebook):
 
                     zi = ZipInfo(path)
                     oldzi = inf.getinfo(path)
-                    try: 
+                    try:
                         zi.compress_type = oldzi.compress_type
                         if path == "mimetype":
                             zi.compress_type = ZIP_STORED
@@ -146,7 +146,7 @@ def removeHTMLwatermarks(object, path_to_ebook):
 
                     # Python 3 has a bug where the external_attr is reset to `0o600 << 16`
                     # if it's NULL, so we need a workaround:
-                    if zi.external_attr == 0: 
+                    if zi.external_attr == 0:
                         zi = ZeroedZipInfo(zi)
 
 
@@ -157,11 +157,11 @@ def removeHTMLwatermarks(object, path_to_ebook):
 
         if (count_adept > 0):
             print("Watermark: Successfully stripped {0} ADEPT watermark(s) from ebook.".format(count_adept))
-        
+
         if (count_lemonink_invisible > 0 or count_lemonink_visible > 0):
             print("Watermark: Successfully stripped {0} visible and {1} invisible LemonInk watermark(s) (\"{2}\") from ebook."
                 .format(count_lemonink_visible, count_lemonink_invisible, lemonink_trackingID))
-            
+
         if (count_pocketbook > 0):
             print("Watermark: Successfully stripped {0} Pocketbook watermark(s) from ebook.".format(count_pocketbook))
 
@@ -170,7 +170,7 @@ def removeHTMLwatermarks(object, path_to_ebook):
     except:
         traceback.print_exc()
         return path_to_ebook
-        
+
 
 
 
@@ -183,11 +183,11 @@ def removeOPFwatermarks(object, path_to_ebook):
         inf = ZipFile(open(path_to_ebook, 'rb'))
         container = etree.fromstring(inf.read("META-INF/container.xml"))
         rootfiles = container.find(contNS("rootfiles")).findall(contNS("rootfile"))
-        for rootfile in rootfiles: 
+        for rootfile in rootfiles:
             opf_path = rootfile.get("full-path", None)
             if (opf_path is not None):
                 break
-    except: 
+    except:
         traceback.print_exc()
         return path_to_ebook
 
@@ -237,7 +237,7 @@ def removeOPFwatermarks(object, path_to_ebook):
         namelist = inf.namelist()
         namelist.remove("mimetype")
 
-        try: 
+        try:
             output = object.temporary_file(".epub").name
             kwds = dict(compression=ZIP_DEFLATED, allowZip64=False)
             with closing(ZipFile(open(output, 'wb'), 'w', **kwds)) as outf:
@@ -250,7 +250,7 @@ def removeOPFwatermarks(object, path_to_ebook):
 
                     zi = ZipInfo(path)
                     oldzi = inf.getinfo(path)
-                    try: 
+                    try:
                         zi.compress_type = oldzi.compress_type
                         if path == "mimetype":
                             zi.compress_type = ZIP_STORED
@@ -271,14 +271,14 @@ def removeOPFwatermarks(object, path_to_ebook):
 
                     # Python 3 has a bug where the external_attr is reset to `0o600 << 16`
                     # if it's NULL, so we need a workaround:
-                    if zi.external_attr == 0: 
+                    if zi.external_attr == 0:
                         zi = ZeroedZipInfo(zi)
 
                     outf.writestr(zi, data)
         except:
             traceback.print_exc()
             return path_to_ebook
-        
+
         if had_elibri:
             print("Watermark: Successfully stripped eLibri watermark from OPF file.")
         if had_amazon:
@@ -289,9 +289,9 @@ def removeOPFwatermarks(object, path_to_ebook):
 
 
 def removeCDPwatermark(object, path_to_ebook):
-    # "META-INF/cdp.info" is a watermark file used by some Tolino vendors. 
+    # "META-INF/cdp.info" is a watermark file used by some Tolino vendors.
     # We don't want that in our eBooks, so lets remove that file.
-    try: 
+    try:
         infile = ZipFile(open(path_to_ebook, 'rb'))
         namelist = infile.namelist()
         if 'META-INF/cdp.info' not in namelist:
@@ -307,10 +307,10 @@ def removeCDPwatermark(object, path_to_ebook):
             for path in (["mimetype"] + namelist):
 
                 data = infile.read(path)
-                
+
                 zi = ZipInfo(path)
                 oldzi = infile.getinfo(path)
-                try: 
+                try:
                     zi.compress_type = oldzi.compress_type
                     if path == "mimetype":
                         zi.compress_type = ZIP_STORED
@@ -331,14 +331,14 @@ def removeCDPwatermark(object, path_to_ebook):
 
                 # Python 3 has a bug where the external_attr is reset to `0o600 << 16`
                 # if it's NULL, so we need a workaround:
-                if zi.external_attr == 0: 
+                if zi.external_attr == 0:
                     zi = ZeroedZipInfo(zi)
 
                 outf.writestr(zi, data)
-        
+
         print("Watermark: Successfully removed cdp.info watermark")
         return output
 
-    except: 
+    except:
         traceback.print_exc()
         return path_to_ebook

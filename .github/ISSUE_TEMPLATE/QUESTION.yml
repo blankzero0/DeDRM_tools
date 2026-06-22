@@ -12,7 +12,7 @@ body:
       label: Which version of Calibre are you running?
       description: "Example: 6.23"
       placeholder: "6.23"
-    validations: 
+    validations:
       required: true
   - type: input
     id: plugin-version
@@ -20,7 +20,7 @@ body:
       label: Which version of the DeDRM plugin are you running?
       description: "Example: v10.0.2"
       placeholder: "v10.0.2"
-    validations: 
+    validations:
       required: true
   - type: input
     id: kindle-version
@@ -28,7 +28,7 @@ body:
       label: If applicable, which version of the Kindle software are you running?
       description: "Example: 1.24"
       placeholder: "Leave empty if unrelated to Kindle books"
-    validations: 
+    validations:
       required: false
   - type: textarea
     id: log

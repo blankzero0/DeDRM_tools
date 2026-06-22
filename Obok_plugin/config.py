@@ -86,7 +86,7 @@ class ConfigWidget(QWidget):
             find_homes = 'Never'
         elif self.find_homes.currentText() == _('Add new entry'):
             find_homes = 'Add new entry'
-        
+
         if find_homes is None:
             # Fallback
             find_homes = self.find_homes.currentText()
@@ -140,13 +140,13 @@ class ManageKeysDialog(QDialog):
         self._delete_key_button.clicked.connect(self.delete_key)
         button_layout.addWidget(self._delete_key_button)
 
-        try: 
+        try:
             # QT 6
             spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Policy.Minimum, QtGui.QSizePolicy.Policy.Expanding)
         except AttributeError:
             # QT 5
             spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-            
+
         button_layout.addItem(spacerItem)
 
         layout.addSpacing(5)

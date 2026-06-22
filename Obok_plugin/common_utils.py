@@ -215,7 +215,7 @@ class ImageTitleLayout(QHBoxLayout):
         shelf_label.setFont(title_font)
         self.addWidget(shelf_label)
         self.insertStretch(-1)
-        
+
         # Add hyperlink to a help file at the right. We will replace the correct name when it is clicked.
         help_label = QLabel(('<a href="http://www.foo.com/">{0}</a>').format(_("Help")), parent)
         help_label.setTextInteractionFlags(Qt.LinksAccessibleByMouse | Qt.LinksAccessibleByKeyboard)

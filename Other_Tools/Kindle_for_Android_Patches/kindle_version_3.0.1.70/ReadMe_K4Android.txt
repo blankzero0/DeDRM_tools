@@ -10,7 +10,7 @@ Instead of trying to calculate the correct PIDs for each book from this primary 
 Obviously, to use "Me"'s approach, requires an Android Developer's Certificate (to sign the modified application) and access to and knowledge of the developer tools, but does not require anything to be jail-broken.
 
 This is a copy the detailed instructions supplied by "Me" to the ApprenticeAlf blog in the comments.  The kindle3.patch described below is included in this folder in the tools:
- 
+
 From the ApprenticeAlf Comments:
 
 "Me" writes:
