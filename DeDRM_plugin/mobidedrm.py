@@ -103,7 +103,7 @@ def PC1(key, src, decryption=True):
     # if we can get it from alfcrypto, use that
     try:
         return Pukall_Cipher().PC1(key,src,decryption)
-    except: 
+    except:
         raise
 
 letters = b'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789'
@@ -156,7 +156,7 @@ def getSizeOfTrailingDataEntries(ptr, size, flags):
     if flags & 1:
         if sys.version_info[0] == 2:
             num += (ord(ptr[size - num - 1]) & 0x3) + 1
-        else: 
+        else:
             num += (ptr[size - num - 1] & 0x3) + 1
     return num
 
@@ -339,7 +339,7 @@ class MobiBook:
                 temp_key_sum = sum(map(ord,temp_key)) & 0xff
             else:
                 temp_key_sum = sum(temp_key) & 0xff
-            
+
             for i in range(count):
                 verification, size, type, cksum, cookie = struct.unpack('>LLLBxxx32s', data[i*0x30:i*0x30+0x30])
                 if cksum == temp_key_sum:

@@ -137,11 +137,11 @@ def encryption(infile):
                 elif 'META-INF/rights.xml' in namelist and b"<kdrm>" in inzip.read("META-INF/rights.xml"):
                     # Untested, just found this info on Google
                     encryption = "Kobo"
-                
+
                 elif 'META-INF/rights.xml' not in namelist or 'META-INF/encryption.xml' not in namelist:
                     encryption = "Unencrypted"
                 else:
-                    try: 
+                    try:
                         rights = etree.fromstring(inzip.read('META-INF/rights.xml'))
                         adept = lambda tag: '{%s}%s' % (NSMAP['adept'], tag)
                         expr = './/%s' % (adept('encryptedKey'),)
@@ -152,7 +152,7 @@ def encryption(infile):
                             encryption = "B&N"
                         else:
                             encryption = "Unknown (key len " + str(len(bookkey)) + ")"
-                    except: 
+                    except:
                         encryption = "Unknown"
     except:
         traceback.print_exc()

@@ -132,7 +132,7 @@ class fixZip:
 
             # Python 3 has a bug where the external_attr is reset to `0o600 << 16`
             # if it's NULL, so we need a workaround:
-            if mimeinfo.external_attr == 0: 
+            if mimeinfo.external_attr == 0:
                 mimeinfo = ZeroedZipInfo(mimeinfo)
 
             self.outzip.writestr(mimeinfo, _MIMETYPE.encode('ascii'))
@@ -163,7 +163,7 @@ class fixZip:
 
                 # Python 3 has a bug where the external_attr is reset to `0o600 << 16`
                 # if it's NULL, so we need a workaround:
-                if nzinfo.external_attr == 0: 
+                if nzinfo.external_attr == 0:
                     nzinfo = ZeroedZipInfo(nzinfo)
 
                 self.outzip.writestr(nzinfo,data)

@@ -40,7 +40,7 @@ class Decryptor(object):
         dsig = lambda tag: '{%s}%s' % ('http://www.w3.org/2000/09/xmldsig#', tag)
         self.obfuscation_key_Adobe = obfuscationkeyAdobe
         self.obfuscation_key_IETF = obfuscationkeyIETF
-        
+
         self._encryption = etree.fromstring(encryption)
         # This loops through all entries in the "encryption.xml" file
         # to figure out which files need to be decrypted.
@@ -75,12 +75,12 @@ class Decryptor(object):
                     else:
                         json_elements_to_remove.add(elem.getparent().getparent())
 
-                else: 
+                else:
                     path = path.encode('utf-8')
                     other.add(path)
                     self._has_remaining_xml = True
                     # Other unsupported type.
-        
+
         for elem in json_elements_to_remove:
             elem.getparent().remove(elem)
 
@@ -101,7 +101,7 @@ class Decryptor(object):
             # possibly not compressed by zip - just return bytes
             return bytes, False
         return decompressed_bytes , True
-    
+
     def decrypt(self, path, data):
         if path.encode('utf-8') in self._obfuscatedIETF and self.obfuscation_key_IETF is not None:
             # de-obfuscate according to the IETF standard
@@ -110,7 +110,7 @@ class Decryptor(object):
             if len(data) <= 1040:
                 # de-obfuscate whole file
                 out = self.deobfuscate_single_data(self.obfuscation_key_IETF, data)
-            else: 
+            else:
                 out = self.deobfuscate_single_data(self.obfuscation_key_IETF, data[:1040]) + data[1040:]
 
             if (not was_decomp):
@@ -124,19 +124,19 @@ class Decryptor(object):
             if len(data) <= 1024:
                 # de-obfuscate whole file
                 out = self.deobfuscate_single_data(self.obfuscation_key_Adobe, data)
-            else: 
+            else:
                 out = self.deobfuscate_single_data(self.obfuscation_key_Adobe, data[:1024]) + data[1024:]
 
             if (not was_decomp):
                 out, was_decomp = self.decompress(out)
             return out
 
-        else: 
+        else:
             # Not encrypted or obfuscated
             return data
 
     def deobfuscate_single_data(self, key, data):
-        try: 
+        try:
             msg = bytes([c^k for c,k in zip(data, itertools.cycle(key))])
         except TypeError:
             # Python 2
@@ -163,11 +163,11 @@ def decryptFontsBook(inpath, outpath):
         try:
             container = etree.fromstring(inf.read("META-INF/container.xml"))
             rootfiles = container.find(contNS("rootfiles")).findall(contNS("rootfile"))
-            for rootfile in rootfiles: 
+            for rootfile in rootfiles:
                 path = rootfile.get("full-path", None)
                 if (path is not None):
                     break
-        except: 
+        except:
             pass
 
         # If path is None, we didn't find an OPF, so we probably don't have a font key.
@@ -178,11 +178,11 @@ def decryptFontsBook(inpath, outpath):
             return 1
         else:
             packageNS = lambda tag: '{%s}%s' % ('http://www.idpf.org/2007/opf', tag)
-            metadataDCNS = lambda tag: '{%s}%s' % ('http://purl.org/dc/elements/1.1/', tag) 
+            metadataDCNS = lambda tag: '{%s}%s' % ('http://purl.org/dc/elements/1.1/', tag)
 
             try:
                 container = etree.fromstring(inf.read(path))
-            except: 
+            except:
                 container = []
 
             ## IETF font key algorithm:
@@ -190,15 +190,15 @@ def decryptFontsBook(inpath, outpath):
             secret_key_name = None
             try:
                 secret_key_name = container.get("unique-identifier")
-            except: 
+            except:
                 pass
 
-            try: 
+            try:
                 identify_elements = container.find(packageNS("metadata")).findall(metadataDCNS("identifier"))
                 for element in identify_elements:
                     if (secret_key_name is None or secret_key_name == element.get("id")):
                         font_master_key = element.text
-            except: 
+            except:
                 pass
 
             if (font_master_key is not None):
@@ -220,25 +220,25 @@ def decryptFontsBook(inpath, outpath):
             ## Adobe font key algorithm
             print("FontDecrypt: Checking {0} for Adobe font obfuscation keys ... ".format(path), end='')
 
-            try: 
+            try:
                 metadata = container.find(packageNS("metadata"))
                 identifiers = metadata.findall(metadataDCNS("identifier"))
 
                 uid = None
                 uidMalformed = False
 
-                for identifier in identifiers: 
+                for identifier in identifiers:
                     if identifier.get(packageNS("scheme")) == "UUID":
                         if identifier.text[:9] == "urn:uuid:":
                             uid = identifier.text[9:]
-                        else: 
+                        else:
                             uid = identifier.text
                         break
                     if identifier.text[:9] == "urn:uuid:":
                         uid = identifier.text[9:]
                         break
 
-                
+
                 if uid is not None:
                     uid = uid.replace(chr(0x20),'').replace(chr(0x09),'')
                     uid = uid.replace(chr(0x0D),'').replace(chr(0x0A),'').replace('-','')
@@ -247,13 +247,13 @@ def decryptFontsBook(inpath, outpath):
                         uidMalformed = True
                     if not all(c in "0123456789abcdefABCDEF" for c in uid):
                         uidMalformed = True
-                    
-                    
+
+
                     if not uidMalformed:
                         print("found '{0}'".format(uid))
                         uid = uid + uid
                         adobe_master_encryption_key = binascii.unhexlify(uid[:32])
-                
+
                 if adobe_master_encryption_key is None:
                     print("not found")
 
@@ -270,7 +270,7 @@ def decryptFontsBook(inpath, outpath):
             with closing(ZipFile(open(outpath, 'wb'), 'w', **kwds)) as outf:
 
                 # Mimetype needs to be the first entry, so remove it from the list
-                # whereever it is, then add it at the beginning. 
+                # whereever it is, then add it at the beginning.
                 namelist.remove("mimetype")
 
                 for path in (["mimetype"] + namelist):
@@ -281,13 +281,13 @@ def decryptFontsBook(inpath, outpath):
                     if path == "mimetype":
                         # mimetype must not be compressed
                         zi.compress_type = ZIP_STORED
-                    
+
                     elif path == "META-INF/encryption.xml":
                         # Check if there's still other entries not related to fonts
                         if (decryptor.check_if_remaining()):
                             data = decryptor.get_xml()
                             print("FontDecrypt: There's remaining entries in encryption.xml, adding file ...")
-                        else: 
+                        else:
                             # No remaining entries, no need for that file.
                             continue
 
@@ -313,14 +313,14 @@ def decryptFontsBook(inpath, outpath):
 
                     # Python 3 has a bug where the external_attr is reset to `0o600 << 16`
                     # if it's NULL, so we need a workaround:
-                    if zi.external_attr == 0: 
+                    if zi.external_attr == 0:
                         zi = ZeroedZipInfo(zi)
 
                     if path == "mimetype":
                         outf.writestr(zi, inf.read('mimetype'))
                     elif path == "META-INF/encryption.xml":
                         outf.writestr(zi, data)
-                    else: 
+                    else:
                         outf.writestr(zi, decryptor.decrypt(path, data))
         except:
             print("FontDecrypt: Could not decrypt fonts in {0:s} because of an exception:\n{1:s}".format(os.path.basename(inpath), traceback.format_exc()))

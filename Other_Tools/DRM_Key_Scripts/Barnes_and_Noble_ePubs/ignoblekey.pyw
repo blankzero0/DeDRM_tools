@@ -52,7 +52,7 @@ class SafeUnbuffered:
             raise
     def __getattr__(self, attr):
         return getattr(self.stream, attr)
-        
+
 
 try:
     from calibre.constants import iswindows, isosx

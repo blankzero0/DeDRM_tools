@@ -12,7 +12,7 @@ import traceback
 #@@CALIBRE_COMPAT_CODE@@
 
 
-try: 
+try:
     from calibre.utils.config import JSONConfig
 except:
     from standalone.jsonconfig import JSONConfig

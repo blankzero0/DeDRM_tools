@@ -12,7 +12,7 @@ def uStrCmp (s1, s2, caseless=False):
     if sys.version_info[0] == 2:
         str1 = s1 if isinstance(s1, unicode) else unicode(s1)
         str2 = s2 if isinstance(s2, unicode) else unicode(s2)
-    else: 
+    else:
         str1 = s1 if isinstance(s1, str) else str(s1)
         str2 = s2 if isinstance(s2, str) else str(s2)
 
@@ -46,4 +46,3 @@ class SafeUnbuffered:
             raise
     def __getattr__(self, attr):
         return getattr(self.stream, attr)
-        

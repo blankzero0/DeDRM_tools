@@ -141,18 +141,18 @@ if iswindows:
             # We're on Python 2
             try:
                 # The default _winreg on Python2 isn't unicode-safe.
-                # Check if we have winreg_unicode, a unicode-safe alternative. 
+                # Check if we have winreg_unicode, a unicode-safe alternative.
                 # Without winreg_unicode, this will fail with Unicode chars in the username.
                 from adobekey_winreg_unicode import OpenKey, QueryValueEx, HKEY_CURRENT_USER
             except:
                 from _winreg import OpenKey, QueryValueEx, HKEY_CURRENT_USER
 
-        try: 
+        try:
             DEVICE_KEY_PATH = r'Software\Adobe\Adept\Device'
             regkey = OpenKey(HKEY_CURRENT_USER, DEVICE_KEY_PATH)
             userREG = QueryValueEx(regkey, 'username')[0].encode('utf-16-le')[::2]
             return userREG
-        except: 
+        except:
             return None
 
     PAGE_EXECUTE_READWRITE = 0x40
@@ -192,7 +192,7 @@ if iswindows:
 
         def __del__(self):
             if self._buf is not None:
-                try: 
+                try:
                     VirtualFree(self._buf)
                     self._buf = None
                 except TypeError:
@@ -282,7 +282,7 @@ if iswindows:
         vendor = cpuid0()
         signature = struct.pack('>I', cpuid1())[1:]
         user = GetUserName2()
-        if user is None: 
+        if user is None:
             user = GetUserName()
         entropy = struct.pack('>I12s3s13s', serial, vendor, signature, user)
         cuser = winreg.HKEY_CURRENT_USER
@@ -308,7 +308,7 @@ if iswindows:
             except:
                 # No more keys
                 break
-                
+
             ktype = winreg.QueryValueEx(plkparent, None)[0]
             if ktype != 'credentials':
                 continue
@@ -324,11 +324,11 @@ if iswindows:
                     uuid_name = uuid_name + winreg.QueryValueEx(plkkey, 'value')[0][9:] + "_"
                 if ktype == 'username':
                     # Add account type & email to key name, if present
-                    try: 
-                        uuid_name = uuid_name + winreg.QueryValueEx(plkkey, 'method')[0] + "_" 
+                    try:
+                        uuid_name = uuid_name + winreg.QueryValueEx(plkkey, 'method')[0] + "_"
                     except:
                         pass
-                    try: 
+                    try:
                         uuid_name = uuid_name + winreg.QueryValueEx(plkkey, 'value')[0] + "_"
                     except:
                         pass
@@ -391,12 +391,12 @@ elif isosx:
 
         exprUUID = '//%s/%s' % (adept('credentials'), adept('user'))
         keyName = ""
-        try: 
+        try:
             keyName = tree.findtext(exprUUID)[9:] + "_"
-        except: 
+        except:
             pass
 
-        try: 
+        try:
             exprMail = '//%s/%s' % (adept('credentials'), adept('username'))
             keyName = keyName + tree.find(exprMail).attrib["method"] + "_"
             keyName = keyName + tree.findtext(exprMail) + "_"

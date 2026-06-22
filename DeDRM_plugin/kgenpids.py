@@ -94,7 +94,7 @@ def getTwoBitsFromBitField(bitField,offset):
         return ord(bitField[byteNumber]) >> bitPosition & 3
     else:
         return bitField[byteNumber] >> bitPosition & 3
-    
+
 # Returns the six bits at offset from a bit field
 def getSixBitsFromBitField(bitField,offset):
     offset *= 3
@@ -107,7 +107,7 @@ def encodePID(hash):
     PID = b''
     for position in range (0,8):
         PID += bytes(bytearray([charMap3[getSixBitsFromBitField(hash,position)]]))
-        
+
     return PID
 
 # Encryption table used to generate the device PID
@@ -173,7 +173,7 @@ def pidFromSerial(s, l):
     for i in range(len(s)):
         if sys.version_info[0] == 2:
             arr1[i%l] ^= ord(s[i])
-        else: 
+        else:
             arr1[i%l] ^= s[i]
     crc_bytes = [crc >> 24 & 0xff, crc >> 16 & 0xff, crc >> 8 & 0xff, crc & 0xff]
     for i in range(l):

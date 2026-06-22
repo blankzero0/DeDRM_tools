@@ -72,7 +72,7 @@ def getNookLogFiles():
             if os.path.isdir(path):
                 paths.add(path)
 
-            if sys.version_info[0] == 2:  
+            if sys.version_info[0] == 2:
                 path = winreg.ExpandEnvironmentStrings(u"%USERPROFILE%")+u"\\AppData\\Roaming"
             else:
                 path = winreg.ExpandEnvironmentStrings("%USERPROFILE%")+"\\AppData\\Roaming"

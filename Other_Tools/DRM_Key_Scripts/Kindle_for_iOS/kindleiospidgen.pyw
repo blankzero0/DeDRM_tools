@@ -45,7 +45,7 @@ class SafeUnbuffered:
             raise
     def __getattr__(self, attr):
         return getattr(self.stream, attr)
-        
+
 
 iswindows = sys.platform.startswith('win')
 isosx = sys.platform.startswith('darwin')

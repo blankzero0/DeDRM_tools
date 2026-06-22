@@ -16,13 +16,13 @@ class legacy_obok(object):
             return self._userkey
         self._userkey = self.__oldcookiedeviceid()
         return self._userkey
-        
+
     def __bytearraytostring(self, bytearr):
         wincheck = re.match('@ByteArray\\((.+)\\)', bytearr)
         if wincheck:
             return wincheck.group(1)
         return bytearr
-    
+
     def plist_to_dictionary(self, filename):
         from subprocess import Popen, PIPE
         from plistlib import readPlistFromString
@@ -34,7 +34,7 @@ class legacy_obok(object):
         p.stdin.write(content)
         out, err = p.communicate()
         return readPlistFromString(out)
-    
+
     def __oldcookiedeviceid(self):
         '''Optionally attempt to get a device id using the old cookie method.
         Must have winreg installed on Windows machines for successful key retrieval.'''

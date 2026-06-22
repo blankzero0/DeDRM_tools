@@ -21,7 +21,7 @@ __version__ = '1'
 
 import sys, os, time
 import base64, hashlib
-try: 
+try:
     from Cryptodome.Cipher import AES
 except ImportError:
     from Crypto.Cipher import AES
@@ -90,7 +90,7 @@ if iswindows:
             except:
                 # No more keys
                 break
-                
+
             ktype = winreg.QueryValueEx(plkparent, None)[0]
 
             if ktype == "activationToken":
@@ -112,7 +112,7 @@ if iswindows:
 
             # Note: There can be multiple lists, with multiple entries each.
             if ktype == 'passHashList':
-            
+
                 # Find operator (used in key name)
                 j = -1
                 lastOperator = "Unknown"
@@ -127,12 +127,12 @@ if iswindows:
                     ktype = winreg.QueryValueEx(plkkey, None)[0]
                     if ktype == 'operatorURL':
                         operatorURL = winreg.QueryValueEx(plkkey, 'value')[0]
-                        try: 
+                        try:
                             lastOperator = operatorURL.split('//')[1].split('/')[0]
                         except:
                             pass
-                
-                
+
+
                 # Find hashes
                 j = -1
                 while True:
@@ -167,7 +167,7 @@ if iswindows:
 
         return keys_decrypted, names
 
-   
+
 else:
     def passhash_keys():
         raise ADEPTError("This script only supports Windows.")

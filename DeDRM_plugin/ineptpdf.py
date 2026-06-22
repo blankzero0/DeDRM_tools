@@ -149,7 +149,7 @@ def nunpack(s, default=0):
     elif l == 3:
         if sys.version_info[0] == 2:
             return struct.unpack('>L', '\x00'+s)[0]
-        else: 
+        else:
             return struct.unpack('>L', bytes([0]) + s)[0]
     elif l == 4:
         return struct.unpack('>L', s)[0]
@@ -414,9 +414,9 @@ class PSBaseParser(object):
             self.hex += c
             return (self.parse_literal_hex, i+1)
         if self.hex:
-            if sys.version_info[0] == 2: 
+            if sys.version_info[0] == 2:
                 self.token += chr(int(self.hex, 16))
-            else: 
+            else:
                 self.token += bytes([int(self.hex, 16)])
         return (self.parse_literal, i)
 
@@ -503,16 +503,16 @@ class PSBaseParser(object):
         if self.oct:
             if sys.version_info[0] == 2:
                 self.token += chr(int(self.oct, 8))
-            else: 
-                self.token += bytes([int(self.oct, 8)])  
+            else:
+                self.token += bytes([int(self.oct, 8)])
             return (self.parse_string, i)
         if c in ESC_STRING:
 
             if sys.version_info[0] == 2:
                 self.token += chr(ESC_STRING[c])
-            else: 
+            else:
                 self.token += bytes([ESC_STRING[c]])
-                
+
         return (self.parse_string, i+1)
 
     def parse_wopen(self, s, i):
@@ -527,7 +527,7 @@ class PSBaseParser(object):
             i += 1
         if c == b'>':
             # Empty array without any contents. Why though?
-            # We need to add some dummy python object that will serialize to 
+            # We need to add some dummy python object that will serialize to
             # nothing, otherwise the code removes the whole array.
             self.add_token(EmptyArrayValue())
             i += 1
@@ -554,7 +554,7 @@ class PSBaseParser(object):
         if sys.version_info[0] == 2:
             token = HEX_PAIR.sub(lambda m: chr(int(m.group(0), 16)),
                                                  SPC.sub('', self.token))
-        else: 
+        else:
             token = HEX_PAIR.sub(lambda m: bytes([int(m.group(0), 16)]),
                                                  SPC.sub(b'', self.token))
         self.add_token(token)
@@ -577,9 +577,9 @@ class PSBaseParser(object):
         while 1:
             self.fillbuf()
             if eol:
-                if sys.version_info[0] == 2: 
+                if sys.version_info[0] == 2:
                     c = self.buf[self.charpos]
-                else: 
+                else:
                     c = bytes([self.buf[self.charpos]])
 
                 # handle '\r\n'
@@ -596,12 +596,12 @@ class PSBaseParser(object):
                         eol = True
                     else:
                         break
-                else: 
+                else:
                     if bytes([linebuf[-1]]) == b'\r':
                         eol = True
                     else:
                         break
-                    
+
             else:
                 linebuf += self.buf[self.charpos:]
                 self.charpos = len(self.buf)
@@ -981,7 +981,7 @@ class PDFStream(PDFObject):
                             if pred == '\x02':
                                 ent1 = ''.join(chr((ord(a)+ord(b)) & 255) \
                                                for (a,b) in zip(ent0,ent1))
-                        else: 
+                        else:
                             if pred == 2:
                                 ent1 = b''.join(bytes([(a+b) & 255]) \
                                             for (a,b) in zip(ent0,ent1))
@@ -1442,7 +1442,7 @@ class PDFDocument(object):
             for i in range(1,19+1):
                 if sys.version_info[0] == 2:
                     k = b''.join(chr(ord(c) ^ i) for c in hash )
-                else: 
+                else:
                     k = b''.join(bytes([c ^ i]) for c in hash )
                 x = ARC4.new(k).decrypt(x)
 
@@ -1490,7 +1490,7 @@ class PDFDocument(object):
 
         # Finish hash:
         hash = hash.digest()
-        
+
         if R >= 3:
             # 8
             for _ in range(50):
@@ -1512,11 +1512,11 @@ class PDFDocument(object):
             for i in range(1,19+1):
                 if sys.version_info[0] == 2:
                     k = b''.join(chr(ord(c) ^ i) for c in key )
-                else: 
+                else:
                     k = b''.join(bytes([c ^ i]) for c in key )
                 x = ARC4.new(k).decrypt(x)
             u1 = x+x # 32bytes total
-        
+
         if R == 2:
             is_authenticated = (u1 == U)
         else:
@@ -1622,10 +1622,10 @@ class PDFDocument(object):
     def initialize_ebx_ignoble(self, keyb64, docid, param):
         self.is_printable = self.is_modifiable = self.is_extractable = True
 
-        try: 
+        try:
             key = keyb64.decode('base64')[:16]
             # This will probably always error, but I'm not 100% sure, so lets leave the old code in.
-        except AttributeError: 
+        except AttributeError:
             key = codecs.decode(keyb64.encode("ascii"), 'base64')[:16]
 
 
@@ -1785,9 +1785,9 @@ class PDFDocument(object):
         data = data[16:]
         plaintext = AES.new(key,AES.MODE_CBC,ivector).decrypt(data)
         # remove pkcs#5 aes padding
-        if sys.version_info[0] == 2: 
+        if sys.version_info[0] == 2:
             cutter = -1 * ord(plaintext[-1])
-        else: 
+        else:
             cutter = -1 * plaintext[-1]
 
         plaintext = plaintext[:cutter]
@@ -2307,14 +2307,14 @@ class PDFSerializer(object):
 
                 # Fix length:
                 # We've decompressed and then recompressed the PDF stream.
-                # Depending on the algorithm, the implementation, and the compression level, 
+                # Depending on the algorithm, the implementation, and the compression level,
                 # the resulting recompressed stream is unlikely to have the same length as the original.
                 # So we need to update the PDF object to contain the new proper length.
 
-                # Without this change, all PDFs exported by this plugin are slightly corrupted - 
+                # Without this change, all PDFs exported by this plugin are slightly corrupted -
                 # even though most if not all PDF readers can correct that on-the-fly.
 
-                if 'Length' in obj.dic: 
+                if 'Length' in obj.dic:
                     obj.dic['Length'] = len(data)
 
 

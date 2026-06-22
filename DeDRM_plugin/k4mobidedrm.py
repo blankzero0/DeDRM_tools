@@ -69,7 +69,7 @@ import getopt
 import re
 import traceback
 import time
-try: 
+try:
     import html.entities as htmlentitydefs
 except:
     import htmlentitydefs
@@ -161,10 +161,10 @@ def GetDecryptedBook(infile, kDatabases, androidFiles, serials, pids, starttime 
     else:
         mb = topazextract.TopazBook(infile)
 
-    try: 
+    try:
         bookname = unescape(mb.getBookTitle())
         print("Decrypting {1} ebook: {0}".format(bookname, mb.getBookType()))
-    except: 
+    except:
         print("Decrypting {0} ebook.".format(mb.getBookType()))
 
     # copy list of pids

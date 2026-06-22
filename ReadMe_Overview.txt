@@ -27,7 +27,7 @@ The tools are provided in the form of plugins for calibre. Calibre is an open so
 
 DeDRM plugin for calibre (Linux, Mac OS X and Windows)
 -------------------------------------------------------
-calibe 5.x and later are now written in Python 3, and plugins must also use Python 3. 
+calibe 5.x and later are now written in Python 3, and plugins must also use Python 3.
 
 The DeDRM plugin for calibre removes DRM from your Kindle and Adobe DRM ebooks when they are imported to calibre. Just install the DeDRM plugin (DeDRM_plugin.zip), following the instructions and configuration directions provided in the ReadMe file and the help links in the plugin's configuration dialogs.
 

@@ -318,7 +318,7 @@ def decryptBook(userkey, inpath, outpath):
 
                     # Python 3 has a bug where the external_attr is reset to `0o600 << 16`
                     # if it's NULL, so we need a workaround:
-                    if zi.external_attr == 0: 
+                    if zi.external_attr == 0:
                         zi = ZeroedZipInfo(zi)
 
 

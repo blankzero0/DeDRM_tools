@@ -314,14 +314,14 @@ class KoboLibrary(object):
                             # Python 2.x does not return unicode env. Use Python 3.x
                             if sys.version_info[0] == 2:
                                 self.kobodir = winreg.ExpandEnvironmentStrings(u"%LOCALAPPDATA%")
-                            else: 
+                            else:
                                 self.kobodir = winreg.ExpandEnvironmentStrings("%LOCALAPPDATA%")
                     if (self.kobodir == u""):
                         if 'USERPROFILE' in os.environ.keys():
                             # Python 2.x does not return unicode env. Use Python 3.x
                             if sys.version_info[0] == 2:
                                 self.kobodir = os.path.join(winreg.ExpandEnvironmentStrings(u"%USERPROFILE%"), "Local Settings", "Application Data")
-                            else: 
+                            else:
                                 self.kobodir = os.path.join(winreg.ExpandEnvironmentStrings("%USERPROFILE%"), "Local Settings", "Application Data")
                     self.kobodir = os.path.join(self.kobodir, "Kobo", "Kobo Desktop Edition")
                 elif sys.platform.startswith('darwin'):
@@ -332,10 +332,10 @@ class KoboLibrary(object):
                     kobodir_cache_dir = os.path.join(os.environ['HOME'], ".config", "calibre")
                     if not os.path.isdir(kobodir_cache_dir):
                         os.mkdir(kobodir_cache_dir)
-                    
+
                     #appends the name of the file we're storing the kobodir location info to the above path
                     kobodir_cache_file = str(kobodir_cache_dir) + "/" + "kobo location"
-                    
+
                     """if the above file does not exist, recursively searches from the root
                     of the filesystem until kobodir is found and stores the location of kobodir
                     in that file so this loop can be skipped in the future"""
@@ -430,7 +430,7 @@ class KoboLibrary(object):
         macaddrs = []
         if sys.platform.startswith('win'):
             c = re.compile('\s?(' + '[0-9a-f]{2}[:\-]' * 5 + '[0-9a-f]{2})(\s|$)', re.IGNORECASE)
-            try: 
+            try:
                 output = subprocess.Popen('ipconfig /all', shell=True, stdout=subprocess.PIPE, text=True).stdout
                 for line in output:
                     m = c.search(line)

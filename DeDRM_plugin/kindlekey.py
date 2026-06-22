@@ -66,7 +66,7 @@ except NameError:
 
 from .utilities import SafeUnbuffered
 from .argv_utils import unicode_argv
-    
+
 
 try:
     from calibre.constants import iswindows, isosx
@@ -246,7 +246,7 @@ if iswindows:
                     if buffer[i]>u"\u007f":
                         #print "swapping char "+str(i)+" ("+buffer[i]+")"
                         buffer[i] = u"\ufffd"
-                else: 
+                else:
                     if buffer[i]>"\u007f":
                         #print "swapping char "+str(i)+" ("+buffer[i]+")"
                         buffer[i] = "\ufffd"

@@ -9,14 +9,14 @@ DRM ("Digital Rights Management") is a way of using encryption to tie the books 
 When your ebooks have DRM you are unable to convert the ebook from one format to another (e.g. Kindle KF8 to Kobo ePub), so you are restricted in the range of ebook stores you can use. DRM also allows publishers to restrict what you can do with the ebook you've bought, e.g. preventing the use of text-to-speech software. Longer term, you can never be sure that you'll be able to come back and re-read your ebooks if they have DRM, even if you save back-up copies.
 
 ## So how can I remove DRM from my ebooks?
-Just download and use these tools, that's all! Uh, almost. There are a few, uh, provisos, a couple of quid pro quos. 
+Just download and use these tools, that's all! Uh, almost. There are a few, uh, provisos, a couple of quid pro quos.
 
 * The tools don't work on all ebooks. For example, they don't work on any ebooks from Apple's iBooks store.
 * You must own the ebook - the tools won't work on library ebooks or rented ebooks or books from a friend.
 * You must not use these tools to give your ebooks to a hundred of your closest friends. Or to a million strangers. Authors need to sell books to be able to write more books. Don't be mean to the authors.
 
 ### Recent Changes to Kindle for PC/Kindle for Mac
-Starting with version 1.19, Kindle for PC/Mac uses Amazon's new KFX format which isn't quite as good a source for conversion to ePub as the older KF8 (& MOBI) formats. There are two options to get the older formats. Either stick with version 1.17 or earlier, or modify the executable by changing a file name (PC) or disabling a component of the application (Mac). 
+Starting with version 1.19, Kindle for PC/Mac uses Amazon's new KFX format which isn't quite as good a source for conversion to ePub as the older KF8 (& MOBI) formats. There are two options to get the older formats. Either stick with version 1.17 or earlier, or modify the executable by changing a file name (PC) or disabling a component of the application (Mac).
 
 Version 1.17 of Kindle is no longer available directly from Amazon, so you will need to search for the proper file name and find it on a third party site. The name is `KindleForPC-installer-1.17.44170.exe` for PC and `KindleForMac-44182.dmg` for Mac.  (Note that this is a 32-bit application on the Mac, so will not work on Catalina and newer versions of macOS.)
 Verify the one of the following cryptographic hash values, using software of your choice, before installing the downloaded file in order to avoid viruses. If the hash does not match, delete the downloaded file and try again from another site.
@@ -48,7 +48,7 @@ Mac Note: If the chmod command fails with a permission error try again using `su
 After restarting the Kindle program any books previously downloaded in KFX format will no longer open. You will need to remove them from your device and re-download them. All future downloads will use the older Kindle formats instead of KFX although they will continue to be placed in one individual subdirectory per book. Note that books should be downloaded by right-click and 'Download', not by just opening the book. Recent (1.25+) versions of Kindle for Mac/PC may convert KF8 files to a new format that is not supported by these tools when the book is opened for reading.
 
 #### Decrypting KFX
-Thanks to work by several people, the tools can now decrypt KFX format ebooks from Kindle for Mac/PC. In addition to the DeDRM plugin, calibre users will also need to install jhowell's KFX Input plugin which is available through the standard plugin menu in calibre, or directly from [his plugin thread](https://www.mobileread.com/forums/showthread.php?t=291290) on Mobileread. 
+Thanks to work by several people, the tools can now decrypt KFX format ebooks from Kindle for Mac/PC. In addition to the DeDRM plugin, calibre users will also need to install jhowell's KFX Input plugin which is available through the standard plugin menu in calibre, or directly from [his plugin thread](https://www.mobileread.com/forums/showthread.php?t=291290) on Mobileread.
 
 It's quite possible that Amazon will update their KFX DeDRM to prevent DRM removal from KFX books again. So Remove DRM as soon as possible!
 
@@ -56,7 +56,7 @@ It's quite possible that Amazon will update their KFX DeDRM to prevent DRM remov
 Thanks to jhowell for his investigations into KFX format and the KFX Input plugin. Some of these instructions are from [his thread on the subject](https://www.mobileread.com/forums/showthread.php?t=283371) at MobileRead.
 
 ## Where can I get the latest version of these free DRM removal tools?
-Right here at github. Just go to the [releases page](https://github.com/noDRM/DeDRM_tools/releases) and download the latest zip archive of the tools, named `DeDRM\_tools\_X.X.X.zip`, where X.X.X is the version number. You do not need to download the source code archive. This will get you the forked version by noDRM. If you want to download the original version by Apprentice Harper, go to [this page](https://github.com/apprenticeharper/DeDRM_tools/releases) instead. 
+Right here at github. Just go to the [releases page](https://github.com/noDRM/DeDRM_tools/releases) and download the latest zip archive of the tools, named `DeDRM\_tools\_X.X.X.zip`, where X.X.X is the version number. You do not need to download the source code archive. This will get you the forked version by noDRM. If you want to download the original version by Apprentice Harper, go to [this page](https://github.com/apprenticeharper/DeDRM_tools/releases) instead.
 
 ## I've downloaded the tools archive. Now what?
 First, unzip the archive. You should now have a DeDRM folder containing several files, including a `ReadMe_Overview.txt` file. Please read the `ReadMe_Overview.txt` file! That will explain what the files are, and you'll be able to work out which of the tools you need.
@@ -147,15 +147,15 @@ Remove the DRMed book from calibre. Click the Preferences drop-down menu and cho
 ## Is there a way to use the DeDRM plugin for Calibre from the command line?
 See the [Calibre command line interface (CLI) instructions](CALIBRE_CLI_INSTRUCTIONS.md).
 
-## The plugin displays a "MemoryError" in its log file during DRM removal. 
-A "MemoryError" usually occurs when you're using the 32-bit version of Calibre (which is limited in the amount of useable RAM). If you have a 64-bit installation of your operating system (on Windows, press Windows+Break, then make sure it says "64-bit Operating System" under "System type"), try downloading the 64-bit version of Calibre instead of the 32-bit version. 
+## The plugin displays a "MemoryError" in its log file during DRM removal.
+A "MemoryError" usually occurs when you're using the 32-bit version of Calibre (which is limited in the amount of useable RAM). If you have a 64-bit installation of your operating system (on Windows, press Windows+Break, then make sure it says "64-bit Operating System" under "System type"), try downloading the 64-bit version of Calibre instead of the 32-bit version.
 
 If the error still occurs, even with the 64-bit version, please open a bug report.
 
 # General Questions
 
 ## Once the DRM has been removed, is there any trace of my personal identity left in the ebook?
-That question cannot be answered for sure. While it is easy to check if a book has DRM or not, it is very difficult to verify if all (traces of) personal information have been removed from a book. The tools attempt to remove watermarks when they are detected (optionally, there's an option in the plugin settings to enable that), but that will not be the case for all watermarks. 
+That question cannot be answered for sure. While it is easy to check if a book has DRM or not, it is very difficult to verify if all (traces of) personal information have been removed from a book. The tools attempt to remove watermarks when they are detected (optionally, there's an option in the plugin settings to enable that), but that will not be the case for all watermarks.
 
 ## Why do some of my Kindle ebooks import as HTMLZ format in calibre?
 Most Amazon Kindle ebooks are Mobipocket format ebooks, or the new KF8 format. However, some are in a format known as Topaz. The Topaz format is only used by Amazon. A Topaz ebook is a collections of glyphs and their positions on each page tagged with some additional information from that page including OCRed text (Optical Character Recognition generated Text) to allow searching, and some additional layout information. Each page of a Topaz ebook is effectively a description of an image of that page. To convert a Topaz ebook to another format is not easy as there is not a one-to-one mapping between glyphs and characters/fonts. To account for this, two different formats are generated by the DRM removal software. The first is an html description built from the OCRtext and images stored in the Topaz file (HTMLZ). This format is easily reflowed but may suffer from typical OCRtext errors including typos, garbled text, missing italics, missing bolds, etc. The second format uses the glyph and position information to create an accurate scalable vector graphics (SVG) image of each page of the book that can be viewed in web browsers that support svg images (Safari, Firefox 4 or later, etc). Additional conversion software can be used to convert these SVG images to an image only PDF file. The DeDRM calibre plugin only imports the HTMLZ versions of the Topaz ebook. The html version can be manually cleaned up and spell checked and then converted using Sigil/calibre to epubs, mobi ebooks, and etc.
@@ -183,7 +183,7 @@ Amazon turned off backup for Kindle for Android, so the tools can no longer find
 Apple regularly change the details of their DRM and so the tools in the main tools archive will not work with these ebooks. Apple’s Fairplay DRM scheme can be removed using Requiem if the appropriate version of iTunes can still be installed and used. See the post Apple and ebooks: iBookstore DRM and how to remove it at Apprentice Alf's blog for more details.
 
 ## Why don't the tools work with LCP-encrypted ebooks? / Error message about a "DMCA takedown"
-Support for LCP DRM removal was included in the past, but Readium (the company who developed that particular DRM) has decided to [open a DMCA takedown request](https://github.com/github/dmca/blob/master/2022/01/2022-01-04-readium.md) in January 2022. This means that for legal reasons, this GitHub repository no longer contains the code needed to remove DRM from LCP-encrypted books. For more information please read [this bug report](https://github.com/noDRM/DeDRM_tools/issues/18). 
+Support for LCP DRM removal was included in the past, but Readium (the company who developed that particular DRM) has decided to [open a DMCA takedown request](https://github.com/github/dmca/blob/master/2022/01/2022-01-04-readium.md) in January 2022. This means that for legal reasons, this GitHub repository no longer contains the code needed to remove DRM from LCP-encrypted books. For more information please read [this bug report](https://github.com/noDRM/DeDRM_tools/issues/18).
 
 ## I’ve got the tools archive and I’ve read all the FAQs but I still can’t install the tools and/or the DRM removal doesn’t work
 * Read the `ReadMe_Overview.txt` file in the top level of the tools archive

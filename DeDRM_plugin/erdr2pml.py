@@ -154,7 +154,7 @@ def deXOR(text, sp, table):
     for i in range(len(text)):
         if sys.version_info[0] == 2:
             r += chr(ord(table[j]) ^ ord(text[i]))
-        else: 
+        else:
             r += bytes(bytearray([table[j] ^ text[i]]))
         j = j + 1
         if j == len(table):
