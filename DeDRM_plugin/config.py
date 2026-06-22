@@ -1140,8 +1140,10 @@ class AddAdeptDialog():
             else:  # linux
                 from wineutils import WineGetKeys
 
-                scriptpath = os.path.join(parent.parent.alfdir,"adobekey.py")
-                defaultkeys, defaultnames = WineGetKeys(scriptpath, ".der",parent.getwineprefix())
+                module = os.path.basename(parent.parent.alfdir) + ".adobekey"
+                path = os.path.dirname(parent.parent.alfdir)
+                winekeysdir = os.path.join(path, "winekeysdir")
+                defaultkeys, defaultnames = WineGetKeys(path, module, winekeysdir, ".der", parent.getwineprefix(), [("Cryptodome", "pycryptodomex")])
 
             for key, name in zip(defaultkeys, defaultnames):
                 key = codecs.encode(key,'hex').decode("latin-1")
@@ -1229,8 +1231,10 @@ class AddKindleDialog(QDialog):
             else: # linux
                 from wineutils import WineGetKeys
 
-                scriptpath = os.path.join(parent.parent.alfdir,"kindlekey.py")
-                defaultkeys, defaultnames = WineGetKeys(scriptpath, ".k4i",parent.getwineprefix())
+                module = os.path.basename(parent.parent.alfdir) + ".kindlekey"
+                path = os.path.dirname(parent.parent.alfdir)
+                winekeysdir = os.path.join(path, "winekeysdir")
+                defaultkeys, defaultnames = WineGetKeys(path, module, winekeysdir, ".k4i", parent.getwineprefix(), [("Cryptodome", "pycryptodomex")])
 
             self.default_key = defaultkeys[0]
         except:
