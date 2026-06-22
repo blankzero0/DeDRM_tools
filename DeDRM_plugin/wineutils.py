@@ -62,7 +62,35 @@ class WinePythonCLI:
                         PLUGIN_NAME, PLUGIN_VERSION, " ".join(self.python_exec)
                     ))
         else:
-            raise NoWinePython3Exception("Could not find python3 executable on specified wine prefix")
+            import tempfile
+            import requests
+
+            installer_url = "https://www.python.org/ftp/python/3.14.6/python-3.14.6-amd64.exe"
+            installer_filename = "python-3.14.6-amd64.exe"
+            install_args = ["/passive",  "/quiet", "InstallAllUsers=1", "PrependPath=1", "Include_test=0"]
+
+            with tempfile.TemporaryDirectory() as tmpdir:
+                installer_path = os.path.join(tmpdir, installer_filename)
+                with open(installer_path, "wb") as installer_file:
+                    print(f"{PLUGIN_NAME} v{PLUGIN_VERSION}: Downloading Windows Python installer")
+                    r = requests.get(installer_url, stream=True)
+                    for chunk in r.iter_content(chunk_size=None):
+                        _ = installer_file.write(chunk)
+                try:
+                    print(f"{PLUGIN_NAME} v{PLUGIN_VERSION}: Running installer")
+                    _ = subprocess.check_call(["wine", installer_path] + install_args,
+                        stdin=None, stdout=sys.stdout,
+                        stderr=subprocess.STDOUT, close_fds=False,
+                        bufsize=1
+                    )
+                except subprocess.CalledProcessError:
+                    raise NoWinePython3Exception("Could not install python3 on specified wine prefix")
+
+            self.python_exec = ["wine", "python.exe"]
+            try:
+                self.check_call(["-c", self.py3_test])
+            except subprocess.CalledProcessError:
+                raise NoWinePython3Exception("Could run installed python on specified wine prefix")
 
         for package, requirement in dependencies:
             dep_check = f"import {package}"
@@ -116,8 +144,8 @@ def WineGetKeys(python_path: str, python_module: str, outdirpath: str, extension
 
     try:
         pyexec = WinePythonCLI(wineprefix, python_path, dependencies)
-    except NoWinePython3Exception:
-        print('{0} v{1}: Unable to find python3 executable in WINEPREFIX="{2}"'.format(PLUGIN_NAME, PLUGIN_VERSION, wineprefix))
+    except NoWinePython3Exception as e:
+        print(f'{PLUGIN_NAME} v{PLUGIN_VERSION}: Unable to find python3 executable in WINEPREFIX="{wineprefix}: {e.args[0]}"')
         return [], []
 
     print("{0} v{1}: Running {2} under Wine".format(PLUGIN_NAME, PLUGIN_VERSION, python_module))
