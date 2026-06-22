@@ -4,7 +4,7 @@
 __license__ = 'GPL v3'
 
 # Standard Python modules.
-import os, sys, re, hashlib, traceback
+import os, sys, traceback
 
 #@@CALIBRE_COMPAT_CODE@@
 
