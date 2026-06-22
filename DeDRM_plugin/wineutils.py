@@ -60,7 +60,7 @@ class WinePythonCLI:
     def check_call(self, cli_args: list[str]):
         import subprocess
 
-        env_dict = os.environ
+        env_dict = dict(os.environ)
         env_dict["PYTHONPATH"] = ""
         if self.wineprefix is not None:
             env_dict["WINEPREFIX"] = self.wineprefix
