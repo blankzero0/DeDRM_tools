@@ -569,7 +569,7 @@ class DeDRM(FileTypePlugin):
                         from wineutils import WineGetKeys
 
                         module = os.path.basename(self.alfdir) + ".adobekey"
-                        defaultkeys, defaultnames = WineGetKeys(self.maindir, module, self.winekeysdir, ".der", dedrmprefs['adobewineprefix'])
+                        defaultkeys, defaultnames = WineGetKeys(self.maindir, module, self.winekeysdir, ".der", dedrmprefs['adobewineprefix'], [("Cryptodome", "pycryptodomex")])
 
                 except:
                     print("{0} v{1}: Exception when getting default Adobe Key after {2:.1f} seconds".format(PLUGIN_NAME, PLUGIN_VERSION, time.time()-self.starttime))
@@ -731,7 +731,7 @@ class DeDRM(FileTypePlugin):
                 from wineutils import WineGetKeys
 
                 module = os.path.basename(self.alfdir) + ".adobekey"
-                defaultkeys, defaultnames = WineGetKeys(self.maindir, module, self.winekeysdir, ".der", dedrmprefs['adobewineprefix'])
+                defaultkeys, defaultnames = WineGetKeys(self.maindir, module, self.winekeysdir, ".der",dedrmprefs['adobewineprefix'], [("Cryptodome", "pycryptodomex")])
 
         except:
             print("{0} v{1}: Exception when getting default Adobe Key after {2:.1f} seconds".format(PLUGIN_NAME, PLUGIN_VERSION, time.time()-self.starttime))
@@ -951,7 +951,7 @@ class DeDRM(FileTypePlugin):
                     from wineutils import WineGetKeys
 
                     module = os.path.basename(self.alfdir) + ".kindlekey"
-                    defaultkeys, defaultnames = WineGetKeys(self.maindir, module, self.winekeysdir, ".k4i", dedrmprefs['kindlewineprefix'])
+                    defaultkeys, defaultnames = WineGetKeys(self.maindir, module, self.winekeysdir, ".k4i",dedrmprefs['kindlewineprefix'], [("Cryptodome", "pycryptodomex")])
             except:
                 print("{0} v{1}: Exception when getting default Kindle Key after {2:.1f} seconds".format(PLUGIN_NAME, PLUGIN_VERSION, time.time()-self.starttime))
                 traceback.print_exc()

@@ -1143,7 +1143,7 @@ class AddAdeptDialog():
                 module = os.path.basename(parent.parent.alfdir) + ".adobekey"
                 path = os.path.dirname(parent.parent.alfdir)
                 winekeysdir = os.path.join(path, "winekeysdir")
-                defaultkeys, defaultnames = WineGetKeys(path, module, winekeysdir, ".der", parent.getwineprefix())
+                defaultkeys, defaultnames = WineGetKeys(path, module, winekeysdir, ".der", parent.getwineprefix(), [("Cryptodome", "pycryptodomex")])
 
             if sys.version_info[0] < 3:
                 # Python2
@@ -1242,7 +1242,7 @@ class AddKindleDialog(QDialog):
                 module = os.path.basename(parent.parent.alfdir) + ".kindlekey"
                 path = os.path.dirname(parent.parent.alfdir)
                 winekeysdir = os.path.join(path, "winekeysdir")
-                defaultkeys, defaultnames = WineGetKeys(path, module, winekeysdir, ".k4i", parent.getwineprefix())
+                defaultkeys, defaultnames = WineGetKeys(path, module, winekeysdir, ".k4i", parent.getwineprefix(), [("Cryptodome", "pycryptodomex")])
 
             self.default_key = defaultkeys[0]
         except:
