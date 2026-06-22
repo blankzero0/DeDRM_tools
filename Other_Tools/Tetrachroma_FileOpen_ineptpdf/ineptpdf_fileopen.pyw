@@ -2179,10 +2179,7 @@ class PDFDocument(object):
         except:
             raise ADEPTError('PyWin Extension (Win32API module) needed.\n'+\
                              'Download from http://sourceforge.net/projects/pywin32/files/ ')
-        try:
-            import winreg
-        except ImportError:
-            import _winreg as winreg
+        import winreg
         try:
             v0 = win32api.GetVolumeInformation('C:\\')
             v1 = win32api.GetSystemInfo()[6]

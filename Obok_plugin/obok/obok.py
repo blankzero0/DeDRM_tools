@@ -305,10 +305,7 @@ class KoboLibrary(object):
 
             if (self.kobodir == u""):
                 if sys.platform.startswith('win'):
-                    try:
-                        import winreg
-                    except ImportError:
-                        import _winreg as winreg
+                    import winreg
                     if sys.getwindowsversion().major > 5:
                         if 'LOCALAPPDATA' in os.environ.keys():
                             # Python 2.x does not return unicode env. Use Python 3.x

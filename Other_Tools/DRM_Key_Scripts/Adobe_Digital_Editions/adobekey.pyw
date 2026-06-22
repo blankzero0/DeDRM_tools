@@ -137,10 +137,7 @@ if iswindows:
         c_long, c_ulong
 
     from ctypes.wintypes import LPVOID, DWORD, BOOL
-    try:
-        import winreg
-    except ImportError:
-        import _winreg as winreg
+    import winreg
 
     def _load_crypto_libcrypto():
         from ctypes.util import find_library

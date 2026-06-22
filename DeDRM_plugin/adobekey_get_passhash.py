@@ -60,10 +60,7 @@ def decrypt_passhash(passhash, fp):
 
 
 if iswindows:
-    try:
-        import winreg
-    except ImportError:
-        import _winreg as winreg
+    import winreg
 
     PRIVATE_LICENCE_KEY_PATH = r'Software\Adobe\Adept\Activation'
 

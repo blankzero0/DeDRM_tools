@@ -67,10 +67,7 @@ if iswindows:
         c_long, c_ulong
 
     from ctypes.wintypes import LPVOID, DWORD, BOOL
-    try:
-        import winreg
-    except ImportError:
-        import _winreg as winreg
+    import winreg
 
     try:
         from Cryptodome.Cipher import AES
@@ -134,17 +131,7 @@ if iswindows:
     GetUserName = GetUserName()
 
     def GetUserName2():
-        try:
-            from winreg import OpenKey, QueryValueEx, HKEY_CURRENT_USER
-        except ImportError:
-            # We're on Python 2
-            try:
-                # The default _winreg on Python2 isn't unicode-safe.
-                # Check if we have winreg_unicode, a unicode-safe alternative.
-                # Without winreg_unicode, this will fail with Unicode chars in the username.
-                from adobekey_winreg_unicode import OpenKey, QueryValueEx, HKEY_CURRENT_USER
-            except:
-                from _winreg import OpenKey, QueryValueEx, HKEY_CURRENT_USER
+        from winreg import OpenKey, QueryValueEx, HKEY_CURRENT_USER
 
         try:
             DEVICE_KEY_PATH = r'Software\Adobe\Adept\Device'
