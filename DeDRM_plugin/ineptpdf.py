@@ -95,7 +95,6 @@ def unpad(data, padding=16):
 #@@CALIBRE_COMPAT_CODE@@
 
 from .utilities import SafeUnbuffered
-from .argv_utils import unicode_argv
 
 iswindows = sys.platform.startswith('win')
 isosx = sys.platform.startswith('darwin')
@@ -2364,12 +2363,11 @@ def getPDFencryptionType(inpath):
 def cli_main():
     sys.stdout=SafeUnbuffered(sys.stdout)
     sys.stderr=SafeUnbuffered(sys.stderr)
-    argv=unicode_argv("ineptpdf.py")
-    progname = os.path.basename(argv[0])
-    if len(argv) != 4:
+    progname = os.path.basename(sys.argv[0])
+    if len(sys.argv) != 4:
         print("usage: {0} <keyfile.der> <inbook.pdf> <outbook.pdf>".format(progname))
         return 1
-    keypath, inpath, outpath = argv[1:]
+    keypath, inpath, outpath = sys.argv[1:]
     userkey = open(keypath,'rb').read()
     result = decryptBook(userkey, inpath, outpath)
     if result == 0:

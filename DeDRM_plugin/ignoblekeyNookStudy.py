@@ -36,8 +36,6 @@ try:
 except:
     iswindows = sys.platform.startswith('win')
 
-from .argv_utils import unicode_argv
-
 class DrmException(Exception):
     pass
 
@@ -200,12 +198,11 @@ def usage(progname):
 def cli_main():
     sys.stdout=SafeUnbuffered(sys.stdout)
     sys.stderr=SafeUnbuffered(sys.stderr)
-    argv=unicode_argv("ignoblekeyNookStudy.py")
-    progname = os.path.basename(argv[0])
+    progname = os.path.basename(sys.argv[0])
     print("{0} v{1}\nCopyright © 2015 Apprentice Alf".format(progname,__version__))
 
     try:
-        opts, args = getopt.getopt(argv[1:], "hk:")
+        opts, args = getopt.getopt(sys.argv[1:], "hk:")
     except getopt.GetoptError as err:
         print("Error in options or arguments: {0}".format(err.args[0]))
         usage(progname)
@@ -230,7 +227,7 @@ def cli_main():
            outpath = os.path.abspath(outpath)
     else:
         # save to the same directory as the script
-        outpath = os.path.dirname(argv[0])
+        outpath = os.path.dirname(sys.argv[0])
 
     # make sure the outpath is the
     outpath = os.path.realpath(os.path.normpath(outpath))
@@ -261,10 +258,9 @@ def gui_main():
             self.text.insert(tkinter.constants.END, text)
 
 
-    argv=unicode_argv("ignoblekeyNookStudy.py")
     root = tkinter.Tk()
     root.withdraw()
-    progpath, progname = os.path.split(argv[0])
+    progpath, progname = os.path.split(sys.argv[0])
     success = False
     try:
         keys = nookkeys()

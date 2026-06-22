@@ -80,7 +80,6 @@ except ImportError:
 #@@CALIBRE_COMPAT_CODE@@
 
 from .utilities import SafeUnbuffered
-from .argv_utils import unicode_argv
 
 iswindows = sys.platform.startswith('win')
 isosx = sys.platform.startswith('darwin')
@@ -458,9 +457,8 @@ def getuser_key(name,cc):
 def cli_main():
     print("eRdr2Pml v{0}. Copyright © 2009–2020 The Dark Reverser et al.".format(__version__))
 
-    argv=unicode_argv("erdr2pml.py")
     try:
-        opts, args = getopt.getopt(argv[1:], "hp", ["make-pmlz"])
+        opts, args = getopt.getopt(sys.argv[1:], "hp", ["make-pmlz"])
     except getopt.GetoptError as err:
         print(err.args[0])
         usage()
@@ -497,4 +495,3 @@ if __name__ == "__main__":
     sys.stdout=SafeUnbuffered(sys.stdout)
     sys.stderr=SafeUnbuffered(sys.stderr)
     sys.exit(cli_main())
-

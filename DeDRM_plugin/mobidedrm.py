@@ -87,7 +87,6 @@ import binascii
 
 from .alfcrypto import Pukall_Cipher
 from .utilities import SafeUnbuffered
-from .argv_utils import unicode_argv
 
 
 class DrmException(Exception):
@@ -468,19 +467,18 @@ def getUnencryptedBook(infile,pidlist):
 
 
 def cli_main():
-    argv=unicode_argv("mobidedrm.py")
-    progname = os.path.basename(argv[0])
-    if len(argv)<3 or len(argv)>4:
+    progname = os.path.basename(sys.argv[0])
+    if len(sys.argv) < 3 or len(sys.argv) > 4:
         print("MobiDeDrm v{0:s}.\nCopyright © 2008-2020 The Dark Reverser, Apprentice Harper et al.".format(__version__))
         print("Removes protection from Kindle/Mobipocket, Kindle/KF8 and Kindle/Print Replica ebooks")
         print("Usage:")
         print("    {0} <infile> <outfile> [<Comma separated list of PIDs to try>]".format(progname))
         return 1
     else:
-        infile = argv[1]
-        outfile = argv[2]
-        if len(argv) == 4:
-            pidlist = argv[3].split(',')
+        infile = sys.argv[1]
+        outfile = sys.argv[2]
+        if len(sys.argv) == 4:
+            pidlist = sys.argv[3].split(',')
         else:
             pidlist = []
         try:

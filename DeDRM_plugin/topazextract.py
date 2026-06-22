@@ -27,8 +27,6 @@ from struct import unpack
 from .alfcrypto import Topaz_Cipher
 from .utilities import SafeUnbuffered
 
-from .argv_utils import unicode_argv
-
 
 #global switch
 debug = False
@@ -401,12 +399,11 @@ def usage(progname):
 
 # Main
 def cli_main():
-    argv=unicode_argv("topazextract.py")
-    progname = os.path.basename(argv[0])
+    progname = os.path.basename(sys.argv[0])
     print("TopazExtract v{0}.".format(__version__))
 
     try:
-        opts, args = getopt.getopt(argv[1:], "k:p:s:x")
+        opts, args = getopt.getopt(sys.argv[1:], "k:p:s:x")
     except getopt.GetoptError as err:
         print("Error in options or arguments: {0}".format(err.args[0]))
         usage(progname)
