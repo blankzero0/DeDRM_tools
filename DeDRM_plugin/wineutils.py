@@ -8,7 +8,7 @@ import os, sys, traceback
 
 #@@CALIBRE_COMPAT_CODE@@
 
-from __init__ import PLUGIN_NAME, PLUGIN_VERSION
+from . import PLUGIN_NAME, PLUGIN_VERSION
 
 
 class NoWinePython3Exception(Exception):
