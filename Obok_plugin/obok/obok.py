@@ -192,11 +192,7 @@ except ImportError:
     from Crypto.Cipher import AES
 
 def unpad(data, padding=16):
-    if sys.version_info[0] == 2:
-        pad_len = ord(data[-1])
-    else:
-        pad_len = data[-1]
-
+    pad_len = data[-1]
     return data[:-pad_len]
 
 
@@ -308,18 +304,10 @@ class KoboLibrary(object):
                     import winreg
                     if sys.getwindowsversion().major > 5:
                         if 'LOCALAPPDATA' in os.environ.keys():
-                            # Python 2.x does not return unicode env. Use Python 3.x
-                            if sys.version_info[0] == 2:
-                                self.kobodir = winreg.ExpandEnvironmentStrings(u"%LOCALAPPDATA%")
-                            else:
-                                self.kobodir = winreg.ExpandEnvironmentStrings("%LOCALAPPDATA%")
+                            self.kobodir = winreg.ExpandEnvironmentStrings("%LOCALAPPDATA%")
                     if (self.kobodir == u""):
                         if 'USERPROFILE' in os.environ.keys():
-                            # Python 2.x does not return unicode env. Use Python 3.x
-                            if sys.version_info[0] == 2:
-                                self.kobodir = os.path.join(winreg.ExpandEnvironmentStrings(u"%USERPROFILE%"), "Local Settings", "Application Data")
-                            else:
-                                self.kobodir = os.path.join(winreg.ExpandEnvironmentStrings("%USERPROFILE%"), "Local Settings", "Application Data")
+                            self.kobodir = os.path.join(winreg.ExpandEnvironmentStrings("%USERPROFILE%"), "Local Settings", "Application Data")
                     self.kobodir = os.path.join(self.kobodir, "Kobo", "Kobo Desktop Edition")
                 elif sys.platform.startswith('darwin'):
                     self.kobodir = os.path.join(os.environ['HOME'], "Library", "Application Support", "Kobo", "Kobo Desktop Edition")

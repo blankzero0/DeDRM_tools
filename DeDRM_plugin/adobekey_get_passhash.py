@@ -28,11 +28,7 @@ except ImportError:
 
 
 def unpad(data, padding=16):
-    if sys.version_info[0] == 2:
-        pad_len = ord(data[-1])
-    else:
-        pad_len = data[-1]
-
+    pad_len = data[-1]
     return data[:-pad_len]
 
 PASS_HASH_SECRET = "9ca588496a1bc4394553d9e018d70b9e"

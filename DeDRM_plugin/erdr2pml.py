@@ -141,9 +141,6 @@ def sanitizeFileName(name):
 
 def fixKey(key):
     def fixByte(b):
-        if sys.version_info[0] == 2:
-            b = ord(b)
-
         return b ^ ((b ^ (b<<1) ^ (b<<2) ^ (b<<3) ^ (b<<4) ^ (b<<5) ^ (b<<6) ^ (b<<7) ^ 0x80) & 0x80)
     return bytes(bytearray([fixByte(a) for a in key]))
 
@@ -151,10 +148,7 @@ def deXOR(text, sp, table):
     r=b''
     j = sp
     for i in range(len(text)):
-        if sys.version_info[0] == 2:
-            r += chr(ord(table[j]) ^ ord(text[i]))
-        else:
-            r += bytes(bytearray([table[j] ^ text[i]]))
+        r += bytes(bytearray([table[j] ^ text[i]]))
         j = j + 1
         if j == len(table):
             j = 0

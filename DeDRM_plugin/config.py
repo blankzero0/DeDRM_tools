@@ -1143,15 +1143,7 @@ class AddAdeptDialog():
                 scriptpath = os.path.join(parent.parent.alfdir,"adobekey.py")
                 defaultkeys, defaultnames = WineGetKeys(scriptpath, ".der",parent.getwineprefix())
 
-            if sys.version_info[0] < 3:
-                # Python2
-                import itertools
-                zip_function = itertools.izip
-            else:
-                # Python3
-                zip_function = zip
-
-            for key, name in zip_function(defaultkeys, defaultnames):
+            for key, name in zip(defaultkeys, defaultnames):
                 key = codecs.encode(key,'hex').decode("latin-1")
                 if key in self.parent.plugin_keys.values():
                     print("Found key '{0}' in ADE - already present, skipping.".format(name))

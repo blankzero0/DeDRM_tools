@@ -117,12 +117,7 @@ def primes(n):
 # data and map should be byte arrays
 def encode(data, map):
     result = b''
-    for char in data:
-        if sys.version_info[0] == 2:
-            value = ord(char)
-        else:
-            value = char
-
+    for value in data:
         Q = (value ^ 0x80) // len(map)
         R = value % len(map)
 
@@ -238,14 +233,9 @@ if iswindows:
 
             # replace any non-ASCII values with 0xfffd
             for i in range(0,len(buffer)):
-                if sys.version_info[0] == 2:
-                    if buffer[i]>u"\u007f":
-                        #print "swapping char "+str(i)+" ("+buffer[i]+")"
-                        buffer[i] = u"\ufffd"
-                else:
-                    if buffer[i]>"\u007f":
-                        #print "swapping char "+str(i)+" ("+buffer[i]+")"
-                        buffer[i] = "\ufffd"
+                if buffer[i]>"\u007f":
+                    #print "swapping char "+str(i)+" ("+buffer[i]+")"
+                    buffer[i] = "\ufffd"
             # return utf-8 encoding of modified username
             #print "modified username:"+buffer.value
             return buffer.value.encode('utf-8')
@@ -289,11 +279,7 @@ if iswindows:
         # or the python interface to the 32 vs 64 bit registry is broken
         path = ""
         if 'LOCALAPPDATA' in os.environ.keys():
-            # Python 2.x does not return unicode env. Use Python 3.x
-            if sys.version_info[0] == 2:
-                path = winreg.ExpandEnvironmentStrings(u"%LOCALAPPDATA%")
-            else:
-                path = winreg.ExpandEnvironmentStrings("%LOCALAPPDATA%")
+            path = winreg.ExpandEnvironmentStrings("%LOCALAPPDATA%")
             # this is just another alternative.
             # path = getEnvironmentVariable('LOCALAPPDATA')
             if not os.path.isdir(path):

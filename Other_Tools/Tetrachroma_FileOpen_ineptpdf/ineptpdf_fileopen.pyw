@@ -305,10 +305,7 @@ def nunpack(s, default=0):
     elif l == 2:
         return struct.unpack('>H', s)[0]
     elif l == 3:
-        if sys.version_info[0] == 2:
-            return struct.unpack('>L', '\x00'+s)[0]
-        else:
-            return struct.unpack('>L', bytes([0]) + s)[0]
+        return struct.unpack('>L', bytes([0]) + s)[0]
     elif l == 4:
         return struct.unpack('>L', s)[0]
     else:
@@ -573,10 +570,7 @@ class PSBaseParser(object):
             self.hex += c
             return (self.parse_literal_hex, i+1)
         if self.hex:
-            if sys.version_info[0] == 2:
-                self.token += chr(int(self.hex, 16))
-            else:
-                self.token += bytes([int(self.hex, 16)])
+            self.token += bytes([int(self.hex, 16)])
         return (self.parse_literal, i)
 
 
@@ -663,17 +657,10 @@ class PSBaseParser(object):
             self.oct += c
             return (self.parse_string_1, i+1)
         if self.oct:
-            if sys.version_info[0] == 2:
-                self.token += chr(int(self.oct, 8))
-            else:
-                self.token += bytes([int(self.oct, 8)])
+            self.token += bytes([int(self.oct, 8)])
             return (self.parse_string, i)
         if c in ESC_STRING:
-
-            if sys.version_info[0] == 2:
-                self.token += chr(ESC_STRING[c])
-            else:
-                self.token += bytes([ESC_STRING[c]])
+            self.token += bytes([ESC_STRING[c]])
 
         return (self.parse_string, i+1)
 
@@ -713,11 +700,7 @@ class PSBaseParser(object):
             return (self.parse_hexstring, len(s))
         j = m.start(0)
         self.token += s[i:j]
-        if sys.version_info[0] == 2:
-            token = HEX_PAIR.sub(lambda m: chr(int(m.group(0), 16)),
-                                                 SPC.sub('', self.token))
-        else:
-            token = HEX_PAIR.sub(lambda m: bytes([int(m.group(0), 16)]),
+        token = HEX_PAIR.sub(lambda m: bytes([int(m.group(0), 16)]),
                                                  SPC.sub(b'', self.token))
         self.add_token(token)
         return (self.parse_main, j)
@@ -739,10 +722,7 @@ class PSBaseParser(object):
         while 1:
             self.fillbuf()
             if eol:
-                if sys.version_info[0] == 2:
-                    c = self.buf[self.charpos]
-                else:
-                    c = bytes([self.buf[self.charpos]])
+                c = bytes([self.buf[self.charpos]])
 
                 # handle '\r\n'
                 if c == b'\n':
@@ -753,16 +733,10 @@ class PSBaseParser(object):
             if m:
                 linebuf += self.buf[self.charpos:m.end(0)]
                 self.charpos = m.end(0)
-                if sys.version_info[0] == 2:
-                    if linebuf[-1] == b'\r':
-                        eol = True
-                    else:
-                        break
+                if bytes([linebuf[-1]]) == b'\r':
+                    eol = True
                 else:
-                    if bytes([linebuf[-1]]) == b'\r':
-                        eol = True
-                    else:
-                        break
+                    break
 
             else:
                 linebuf += self.buf[self.charpos:]
@@ -1140,14 +1114,9 @@ class PDFStream(PDFObject):
                     for i in range(0, len(data), columns+1):
                         pred = data[i]
                         ent1 = data[i+1:i+1+columns]
-                        if sys.version_info[0] == 2:
-                            if pred == '\x02':
-                                ent1 = ''.join(chr((ord(a)+ord(b)) & 255) \
-                                               for (a,b) in zip(ent0,ent1))
-                        else:
-                            if pred == 2:
-                                ent1 = b''.join(bytes([(a+b) & 255]) \
-                                            for (a,b) in zip(ent0,ent1))
+                        if pred == 2:
+                            ent1 = b''.join(bytes([(a+b) & 255]) \
+                                    for (a,b) in zip(ent0,ent1))
                         buf += ent1
                         ent0 = ent1
                     data = buf
@@ -1998,10 +1967,7 @@ class PDFDocument(object):
         data = data[16:]
         plaintext = AES.new(key,AES.MODE_CBC,ivector).decrypt(data)
         # remove pkcs#5 aes padding
-        if sys.version_info[0] == 2:
-            cutter = -1 * ord(plaintext[-1])
-        else:
-            cutter = -1 * plaintext[-1]
+        cutter = -1 * plaintext[-1]
 
         plaintext = plaintext[:cutter]
         return plaintext
