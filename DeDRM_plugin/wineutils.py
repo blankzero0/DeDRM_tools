@@ -32,7 +32,6 @@ class WinePythonCLI:
             ["wine", "py.exe", "-3"],
             ["wine", "python3.exe"],
             ["wine", "python.exe"],
-            ["wine", "C:\\Python27\\python.exe"], # Should likely be removed
         ]
         for e in candidate_execs:
             self.python_exec = e
