@@ -4,6 +4,7 @@
 __license__ = 'GPL v3'
 
 # Standard Python modules.
+from typing import Any, Literal, overload
 import os, sys, traceback
 
 #@@CALIBRE_COMPAT_CODE@@
@@ -16,8 +17,11 @@ class NoWinePython3Exception(Exception):
 
 
 class WinePythonCLI:
-    py3_test = "import sys; sys.exit(0 if (sys.version_info.major==3) else 1)"
-    def __init__(self, wineprefix=""):
+    py3_test: str = "import sys; sys.exit(0 if (sys.version_info.major==3) else 1)"
+    wineprefix: str | None
+    python_exec: list[str]
+
+    def __init__(self, wineprefix: str = ""):
         import subprocess
 
         if wineprefix != "":
@@ -53,7 +57,7 @@ class WinePythonCLI:
         raise NoWinePython3Exception("Could not find python3 executable on specified wine prefix")
 
 
-    def check_call(self, cli_args):
+    def check_call(self, cli_args: list[str]):
         import subprocess
 
         env_dict = os.environ
@@ -61,13 +65,17 @@ class WinePythonCLI:
         if self.wineprefix is not None:
             env_dict["WINEPREFIX"] = self.wineprefix
 
-        subprocess.check_call(self.python_exec + cli_args, env=env_dict,
+        _ = subprocess.check_call(self.python_exec + cli_args, env=env_dict,
                               stdin=None, stdout=sys.stdout,
                               stderr=subprocess.STDOUT, close_fds=False,
                               bufsize=1)
 
+@overload
+def WineGetKeys(scriptpath: str, extension: Literal[".k4i"], wineprefix: str = "") -> tuple[list[Any], list[str]]: ...
+@overload
+def WineGetKeys(scriptpath: str, extension: str, wineprefix: str = "") -> tuple[list[bytes], list[str]]: ...
 
-def WineGetKeys(scriptpath, extension, wineprefix=""):
+def WineGetKeys(scriptpath: str, extension: str, wineprefix: str = "") -> tuple[list[Any] | list[bytes], list[str]]:
 
     if extension == ".k4i":
         import json
@@ -89,13 +97,13 @@ def WineGetKeys(scriptpath, extension, wineprefix=""):
         wineprefix = os.path.abspath(os.path.expanduser(os.path.expandvars(wineprefix)))
 
     try:
-        result = pyexec.check_call([scriptpath, outdirpath])
+        pyexec.check_call([scriptpath, outdirpath])
     except Exception as e:
         print("{0} v{1}: Wine subprocess call error: {2}".format(PLUGIN_NAME, PLUGIN_VERSION, e.args[0]))
 
     # try finding winekeys anyway, even if above code errored
-    winekeys = []
-    winekey_names = []
+    winekeys: list[Any] | list[bytes] = []
+    winekey_names: list[str] = []
     # get any files with extension in the output dir
     files = [f for f in os.listdir(outdirpath) if f.endswith(extension)]
     for filename in files:
