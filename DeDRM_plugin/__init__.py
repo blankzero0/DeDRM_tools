@@ -187,6 +187,9 @@ class DeDRM(FileTypePlugin):
             self.alfdir = os.path.join(self.maindir,"libraryfiles")
             if not os.path.exists(self.alfdir):
                 os.mkdir(self.alfdir)
+            self.winekeysdir = os.path.join(self.maindir, "winekeysdir")
+            if not os.path.exists(self.winekeysdir) and not iswindows and not isosx:
+                os.mkdir(self.winekeysdir)
             # only continue if we've never run this version of the plugin before
             self.verdir = os.path.join(self.maindir,PLUGIN_VERSION)
             if not os.path.exists(self.verdir) and not iswindows and not isosx:
@@ -372,8 +375,8 @@ class DeDRM(FileTypePlugin):
                     else: # linux
                         from wineutils import WineGetKeys
 
-                        scriptpath = os.path.join(self.alfdir,"ignoblekeyNookStudy.py")
-                        defaultkeys_study, defaultnames_study = WineGetKeys(scriptpath, ".b64",dedrmprefs['adobewineprefix'])
+                        module = os.path.basename(self.alfdir) + ".ignoblekeyNookStudy"
+                        defaultkeys_study, defaultnames_study = WineGetKeys(self.maindir, module, self.winekeysdir, ".b64", dedrmprefs['adobewineprefix'])
 
                 except:
                     print("{0} v{1}: Exception when getting default NOOK Study Key after {2:.1f} seconds".format(PLUGIN_NAME, PLUGIN_VERSION, time.time()-self.starttime))
@@ -565,8 +568,8 @@ class DeDRM(FileTypePlugin):
                     else: # linux
                         from wineutils import WineGetKeys
 
-                        scriptpath = os.path.join(self.alfdir,"adobekey.py")
-                        defaultkeys, defaultnames = WineGetKeys(scriptpath, ".der",dedrmprefs['adobewineprefix'])
+                        module = os.path.basename(self.alfdir) + ".adobekey"
+                        defaultkeys, defaultnames = WineGetKeys(self.maindir, module, self.winekeysdir, ".der", dedrmprefs['adobewineprefix'])
 
                 except:
                     print("{0} v{1}: Exception when getting default Adobe Key after {2:.1f} seconds".format(PLUGIN_NAME, PLUGIN_VERSION, time.time()-self.starttime))
@@ -727,8 +730,8 @@ class DeDRM(FileTypePlugin):
             else: # linux
                 from wineutils import WineGetKeys
 
-                scriptpath = os.path.join(self.alfdir,"adobekey.py")
-                defaultkeys, defaultnames = WineGetKeys(scriptpath, ".der",dedrmprefs['adobewineprefix'])
+                module = os.path.basename(self.alfdir) + ".adobekey"
+                defaultkeys, defaultnames = WineGetKeys(self.maindir, module, self.winekeysdir, ".der", dedrmprefs['adobewineprefix'])
 
         except:
             print("{0} v{1}: Exception when getting default Adobe Key after {2:.1f} seconds".format(PLUGIN_NAME, PLUGIN_VERSION, time.time()-self.starttime))
@@ -947,8 +950,8 @@ class DeDRM(FileTypePlugin):
                 else: # linux
                     from wineutils import WineGetKeys
 
-                    scriptpath = os.path.join(self.alfdir,"kindlekey.py")
-                    defaultkeys, defaultnames = WineGetKeys(scriptpath, ".k4i",dedrmprefs['kindlewineprefix'])
+                    module = os.path.basename(self.alfdir) + ".kindlekey"
+                    defaultkeys, defaultnames = WineGetKeys(self.maindir, module, self.winekeysdir, ".k4i", dedrmprefs['kindlewineprefix'])
             except:
                 print("{0} v{1}: Exception when getting default Kindle Key after {2:.1f} seconds".format(PLUGIN_NAME, PLUGIN_VERSION, time.time()-self.starttime))
                 traceback.print_exc()

@@ -19,9 +19,10 @@ class NoWinePython3Exception(Exception):
 class WinePythonCLI:
     py3_test: str = "import sys; sys.exit(0 if (sys.version_info.major==3) else 1)"
     wineprefix: str | None
+    python_path: str | None
     python_exec: list[str]
 
-    def __init__(self, wineprefix: str = ""):
+    def __init__(self, wineprefix: str = "", python_path: str | None = None):
         import subprocess
 
         if wineprefix != "":
@@ -31,6 +32,8 @@ class WinePythonCLI:
             self.wineprefix = wineprefix
         else:
             self.wineprefix = None
+
+        self.python_path = python_path
 
         candidate_execs = [
             ["wine", "py.exe", "-3"],
@@ -61,7 +64,12 @@ class WinePythonCLI:
         import subprocess
 
         env_dict = dict(os.environ)
-        env_dict["PYTHONPATH"] = ""
+
+        if self.python_path is not None:
+            env_dict["PYTHONPATH"] = self.python_path
+        else:
+            env_dict["PYTHONPATH"] = ""
+
         if self.wineprefix is not None:
             env_dict["WINEPREFIX"] = self.wineprefix
 
@@ -71,25 +79,23 @@ class WinePythonCLI:
                               bufsize=1)
 
 @overload
-def WineGetKeys(scriptpath: str, extension: Literal[".k4i"], wineprefix: str = "") -> tuple[list[Any], list[str]]: ...
+def WineGetKeys(python_path: str, python_module: str, outdirpath: str, extension: Literal[".k4i"], wineprefix: str = "") -> tuple[list[Any], list[str]]: ...
 @overload
-def WineGetKeys(scriptpath: str, extension: str, wineprefix: str = "") -> tuple[list[bytes], list[str]]: ...
+def WineGetKeys(python_path: str, python_module: str, outdirpath: str, extension: str, wineprefix: str = "") -> tuple[list[bytes], list[str]]: ...
 
-def WineGetKeys(scriptpath: str, extension: str, wineprefix: str = "") -> tuple[list[Any] | list[bytes], list[str]]:
+def WineGetKeys(python_path: str, python_module: str, outdirpath: str, extension: str, wineprefix: str = "") -> tuple[list[Any] | list[bytes], list[str]]:
 
     if extension == ".k4i":
         import json
 
     try:
-        pyexec = WinePythonCLI(wineprefix)
+        pyexec = WinePythonCLI(wineprefix, python_path)
     except NoWinePython3Exception:
         print('{0} v{1}: Unable to find python3 executable in WINEPREFIX="{2}"'.format(PLUGIN_NAME, PLUGIN_VERSION, wineprefix))
         return [], []
 
-    basepath, script = os.path.split(scriptpath)
-    print("{0} v{1}: Running {2} under Wine".format(PLUGIN_NAME, PLUGIN_VERSION, script))
+    print("{0} v{1}: Running {2} under Wine".format(PLUGIN_NAME, PLUGIN_VERSION, python_module))
 
-    outdirpath = os.path.join(basepath, "winekeysdir")
     if not os.path.exists(outdirpath):
         os.makedirs(outdirpath)
 
@@ -97,7 +103,7 @@ def WineGetKeys(scriptpath: str, extension: str, wineprefix: str = "") -> tuple[
         wineprefix = os.path.abspath(os.path.expanduser(os.path.expandvars(wineprefix)))
 
     try:
-        pyexec.check_call([scriptpath, outdirpath])
+        pyexec.check_call(["-m", python_module, outdirpath])
     except Exception as e:
         print("{0} v{1}: Wine subprocess call error: {2}".format(PLUGIN_NAME, PLUGIN_VERSION, e.args[0]))
 
@@ -107,8 +113,8 @@ def WineGetKeys(scriptpath: str, extension: str, wineprefix: str = "") -> tuple[
     # get any files with extension in the output dir
     files = [f for f in os.listdir(outdirpath) if f.endswith(extension)]
     for filename in files:
+        fpath = os.path.join(outdirpath, filename)
         try:
-            fpath = os.path.join(outdirpath, filename)
             with open(fpath, 'rb') as keyfile:
                 if extension == ".k4i":
                     new_key_value = json.loads(keyfile.read())
